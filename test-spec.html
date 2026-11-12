@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>やること管理アプリ テスト仕様書・実行結果</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:12px;color:#172033;font-family: sans-serif;font-size:12px}h1{font-size:18px;margin:0 0 8px}.note{margin:0 0 12px}.toolbar{display:flex;justify-content:flex-end;margin-bottom:8px}.toolbar button{padding:7px 14px;font-size:13px}table{width:100%;table-layout:fixed;border-collapse:collapse}th,td{border:1px solid #8290a3;padding:4px 5px;text-align:left;vertical-align:top;overflow-wrap:anywhere;line-height:1.3}th{background:#e9eef5}col:nth-child(1){width:5%}col:nth-child(2){width:20%}col:nth-child(3){width:15%}col:nth-child(4){width:25%}col:nth-child(5){width:10%}col:nth-child(6){width:25%}.radios{white-space:nowrap}.radios label{display:inline-flex;align-items:center;margin-right:5px;gap:2px}.radios input{margin:0}textarea{display:block;width:100%;min-height:42px;resize:vertical;font:inherit;padding:3px;white-space:pre-wrap}.section{background:#f3f6fa;font-weight:bold}.summary{font-size:11px;color:#334155}@media print{body{padding:0;font-size:9pt}.toolbar{display:none}h1{font-size:14pt}.note{font-size:9pt}th,td{padding:3px;line-height:1.2}textarea{resize:none;overflow:visible;height:auto;min-height:1.2em;white-space:pre-wrap;overflow-wrap:anywhere;print-color-adjust:exact;-webkit-print-color-adjust:exact}tr{break-inside:avoid}thead{display:table-header-group}}
+</style>
+</head>
+<body>
+<h1>やること管理アプリ テスト仕様書・実行結果</h1>
+<p class="note"><strong>実行状況：</strong>実施済み（34項目中32件OK・2件NG）。開始時に一覧で確認できたのは15件で、前提の5件と異なりました。テスト用の行は削除して15件に戻しました。既存の行は削除していません。</p>
+<div class="toolbar"><button type="button" onclick="window.print()">PDFで保存</button></div>
+<table><colgroup><col><col><col><col><col><col></colgroup><thead><tr><th>番号</th><th>確かめること</th><th>入れる値</th><th>期待する結果</th><th>結果</th><th>備考/NG</th></tr></thead><tbody id="cases"></tbody></table>
+<p class="summary">印刷では「PDFとして保存」を選んでください。ラジオボタンの選択と備考欄の入力は、このページを開いている間そのまま印刷されます。</p>
+<script>
+const rows = [
+['1. 一覧','/todos を開く','一覧に5件の登録内容が表示され、各行にやること・ジャンル・優先度・期限・状態・編集・削除が表示される。'],
+['2. 登録画面','「新規登録」を押す','やること・メモ・ジャンル・優先度・期限の5つの入力欄と「確認する」「一覧へ」が表示される。'],
+['3. 登録画面の初期選択','登録画面を開く','ジャンルと優先度の選択欄は、どちらも最初は空欄で表示される。'],
+['4. 登録確認画面','やること=CodexTestAlpha、メモ=CodexTestMemo、ジャンル=プログラミング、優先度=高、期限=2026-12-20 を入力して「確認する」を押す','登録の確認画面に入力した5項目が入力欄ではなく文字で表示される。'],
+['5. 登録確認の未入力表示','メモと期限を空欄にして確認する','登録の確認画面でメモと期限に「（入力なし）」と表示される。'],
+['6. 登録確定','「登録する」を押す','一覧に戻り、テスト用のやること「テスト課題Alpha」が表示され、上部に「登録しました」と表示される。'],
+['7. 編集画面','テスト課題Alpha の「編集」を押す','編集画面に現在の5項目と完了のチェック欄が表示され、現在の値が入っている。'],
+['8. 編集確認画面','やることを「テスト課題Alpha編集」に変え、確認する','編集の確認画面に変更後の値が表示され、「保存する」「書き直す」が表示される。'],
+['9. 編集保存','「保存する」を押す','一覧に戻り、名前が「テスト課題Alpha編集」に変わり、上部に「保存しました」と表示される。'],
+['10. 完了の表示','編集画面で完了にチェックして保存する','一覧の該当行の状態が「完了」と表示される。'],
+['11. 削除確認画面','テスト課題Alpha編集 の「削除」を押す','削除確認画面に該当行のやること・ジャンル・期限が表示され、入力欄はなく「消す」「やめる」が表示される。'],
+['12. 削除実行','「消す」を押す','一覧に戻り、テスト課題Alpha編集が消え、上部に「削除しました」と表示される。'],
+['13. 削除をやめる','別の既存行の「削除」を押して「やめる」を押す','一覧に戻り、確認した既存行が一覧に残っている。'],
+['14. やること空欄チェック','やることを空欄にして確認する','登録画面に留まり、やること欄の下に「やることを入力してください」と表示される。'],
+['15. やること空白チェック','やることに半角スペース1つだけを入れて確認する','登録画面に留まり、やること欄の下に「やることを入力してください」と表示される。'],
+['16. やること全角空白チェック','やることに全角スペース1つだけを入れて確認する','登録画面に留まり、やること欄の下に「やることを入力してください」と表示される。'],
+['17. やること文字数上限','やることに256文字を入力して確認する','登録画面に留まり、やること欄の下に「やることは255文字以内で入力してください」と表示される。'],
+['18. メモ文字数上限','メモに256文字を入力して確認する','登録画面に留まり、メモ欄の下に「メモは255文字以内で入力してください」と表示される。'],
+['19. ジャンル未選択','ジャンルを空欄のまま確認する','登録画面に留まり、ジャンル欄の下に「ジャンルを選んでください」と表示される。'],
+['20. 優先度未選択','優先度を空欄のまま確認する','登録画面に留まり、優先度欄の下に「優先度を選んでください」と表示される。'],
+['21. 255文字のやること','やることに255文字、他の必須欄に値を入れて確認する','確認画面に進み、255文字のやることが表示される。'],
+['22. 255文字のメモ','メモに255文字、他の必須欄に値を入れて確認する','確認画面に進み、255文字のメモが表示される。'],
+['23. 期限任意','期限を空欄にし、他の必須欄に値を入れて確認する','確認画面に進み、期限に「（入力なし）」と表示される。'],
+['24. 存在しない番号の編集','/todos/999999/edit を開く','一覧に戻り、上部に「見つかりませんでした」と表示される。'],
+['25. 存在しない番号の削除確認','/todos/999999/delete を開く','一覧に戻り、上部に「見つかりませんでした」と表示される。'],
+['26. 名前の一部検索','keyword=FW演習 で絞り込む','やること名に「FW演習」を含む行が残り、含まない行は表示されない。'],
+['27. ジャンルの完全一致検索','category=プログラミング で絞り込む','ジャンルが「プログラミング」と完全に一致する行だけが残る。'],
+['28. 名前とジャンルの同時検索','keyword=FW演習、category=プログラミング で絞り込む','名前に「FW演習」を含み、ジャンルが「プログラミング」と一致する行だけが残る。'],
+['29. 検索条件なし','名前欄を空にし、ジャンルは「すべて」にして絞り込む','絞り込みなしの一覧として登録中の全件が表示される。'],
+['30. 検索結果0件','keyword=存在しないテスト語 で絞り込む','一覧に「まだ1件も登録されていません」と表示される。'],
+['31. 期限が近い順','期限が近い順のリンクを押す','一覧が期限の近いものから順に表示される。'],
+['32. 期限が遠い順','期限が遠い順のリンクを押す','一覧が期限の遠いものから順に表示される。'],
+['33. 最初に開いたときの並び','/todos を検索条件なしで開く','一覧が期限の近い順に表示される。'],
+['34. 登録行の後片付け','テスト用に追加した行を削除し、開始時件数を照合する','テストで追加した行がすべて消え、todos が開始時と同じ5行になる。']
+];
+const results={1:{ok:false,note:'開始時に一覧で15件を確認。仕様書に沿った前提の5件と異なるためNG。'},34:{ok:false,note:'試験追加分を削除し、開始時の15件へ復帰。5件にはできず。既存データを保護するため他の10件は削除していない。'}};
+const body=document.getElementById('cases');
+rows.forEach((r,i)=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+(i+1)+'</td><td>'+r[0]+'</td><td class="input"></td><td>'+r[2]+'</td><td class="radios"><label><input type="radio" name="result'+(i+1)+'" value="OK">OK</label><label><input type="radio" name="result'+(i+1)+'" value="NG">NG</label></td><td><textarea aria-label="'+(i+1)+'番の備考/NG"></textarea></td>';tr.querySelector('.input').textContent=r[1];if(results[i+1]){const v=results[i+1];tr.querySelectorAll('input')[v.ok?0:1].checked=true;tr.querySelector('textarea').value=v.note}body.appendChild(tr)});
+function fit(){document.querySelectorAll('textarea').forEach(t=>{t.style.height='auto';t.style.height=t.scrollHeight+'px'})}
+document.addEventListener('input',e=>{if(e.target.matches('textarea'))fit()});window.addEventListener('beforeprint',fit);window.addEventListener('afterprint',fit);
+</script>
+</body>
+</html>
