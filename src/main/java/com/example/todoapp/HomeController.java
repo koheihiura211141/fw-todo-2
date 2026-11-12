@@ -87,4 +87,21 @@ public class HomeController {
         model.addAttribute("todoId", id);
         return "edit";
     }
+    @GetMapping("/todos/{id}/delete")
+    public String confirmDeleteTodo(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Todo todo = todoMapper.findById(id);
+        if (todo == null) {
+            redirectAttributes.addFlashAttribute("message", "見つかりませんでした");
+            return "redirect:/todos";
+        }
+        model.addAttribute("todo", todo);
+        return "delete";
+    }
+
+    @PostMapping("/todos/{id}/delete")
+    public String deleteTodo(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        todoMapper.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "削除しました");
+        return "redirect:/todos";
+    }
 }
