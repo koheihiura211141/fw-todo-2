@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TodoMapper {
-    List<Todo> findAll();
+    List<Todo> search(String keyword, String category, String order);
 
     Todo findById(Long id);
 
