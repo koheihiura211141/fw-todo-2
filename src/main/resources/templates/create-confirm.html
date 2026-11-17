@@ -15,6 +15,7 @@
         <p class="confirm-value">期限：<span th:text="${todo.dueDate == null ? '（入力なし）' : todo.dueDate}">期限</span></p>
         <div class="confirm-actions">
             <form action="/todos" method="post" th:object="${todo}">
+                <input type="hidden" name="author" th:value="*{author}">
                 <input type="hidden" name="title" th:value="*{title}">
                 <input type="hidden" name="detail" th:value="*{detail}">
                 <input type="hidden" name="category" th:value="*{category}">
@@ -23,6 +24,7 @@
                 <button class="btn" type="submit">登録する</button>
             </form>
             <form action="/todos/new" method="post" th:object="${todo}">
+                <input type="hidden" name="author" th:value="*{author}">
                 <input type="hidden" name="title" th:value="*{title}">
                 <input type="hidden" name="detail" th:value="*{detail}">
                 <input type="hidden" name="category" th:value="*{category}">

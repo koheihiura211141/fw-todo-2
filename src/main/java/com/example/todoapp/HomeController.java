@@ -42,20 +42,20 @@ public class HomeController {
     }
 
     @PostMapping("/todos")
-    public String createTodo(@ModelAttribute Todo todo, RedirectAttributes redirectAttributes) {
-        todoService.create(todo);
+    public String createTodo(@ModelAttribute TodoForm form, RedirectAttributes redirectAttributes) {
+        todoService.create(form.toTodo());
         redirectAttributes.addFlashAttribute("message", "登録しました");
         return "redirect:/todos";
     }
 
     @GetMapping("/todos/new")
     public String newTodo(Model model) {
-        model.addAttribute("todo", new Todo());
+        model.addAttribute("todo", new TodoForm());
         return "create";
     }
 
     @PostMapping("/todos/confirm")
-    public String confirmTodo(@Valid @ModelAttribute Todo todo, BindingResult bindingResult, Model model) {
+    public String confirmTodo(@Valid @ModelAttribute("todo") TodoForm todo, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "create";
         }
@@ -64,7 +64,7 @@ public class HomeController {
     }
 
     @PostMapping("/todos/new")
-    public String rewriteTodo(@ModelAttribute Todo todo, Model model) {
+    public String rewriteTodo(@ModelAttribute("todo") TodoForm todo, Model model) {
         model.addAttribute("todo", todo);
         return "create";
     }
@@ -76,13 +76,13 @@ public class HomeController {
             redirectAttributes.addFlashAttribute("message", "見つかりませんでした");
             return "redirect:/todos";
         }
-        model.addAttribute("todo", todo);
+        model.addAttribute("todo", TodoForm.fromTodo(todo));
         model.addAttribute("todoId", id);
         return "edit";
     }
 
     @PostMapping("/todos/{id}/confirm")
-    public String confirmEditTodo(@PathVariable Long id, @Valid @ModelAttribute Todo todo, BindingResult bindingResult, Model model) {
+    public String confirmEditTodo(@PathVariable Long id, @Valid @ModelAttribute("todo") TodoForm todo, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("todoId", id);
             return "edit";
@@ -93,7 +93,8 @@ public class HomeController {
     }
 
     @PostMapping("/todos/{id}")
-    public String updateTodo(@PathVariable Long id, @ModelAttribute Todo todo, RedirectAttributes redirectAttributes) {
+    public String updateTodo(@PathVariable Long id, @ModelAttribute("todo") TodoForm form, RedirectAttributes redirectAttributes) {
+        Todo todo = form.toTodo();
         todo.setId(id);
         todoService.update(todo);
         redirectAttributes.addFlashAttribute("message", "保存しました");
@@ -101,7 +102,7 @@ public class HomeController {
     }
 
     @PostMapping("/todos/{id}/edit")
-    public String rewriteEditTodo(@PathVariable Long id, @ModelAttribute Todo todo, Model model) {
+    public String rewriteEditTodo(@PathVariable Long id, @ModelAttribute("todo") TodoForm todo, Model model) {
         model.addAttribute("todo", todo);
         model.addAttribute("todoId", id);
         return "edit";

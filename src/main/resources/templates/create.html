@@ -10,6 +10,11 @@
         <h1 class="page-title">ToDo登録</h1>
         <form action="/todos/confirm" method="post" th:object="${todo}">
             <div class="form-row">
+                <label class="form-label" for="author">作成者</label>
+                <input class="form-input" id="author" type="text" th:field="*{author}">
+                <p class="error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></p>
+            </div>
+            <div class="form-row">
                 <label class="form-label" for="title">やること</label>
                 <input class="form-input" id="title" type="text" th:field="*{title}">
                 <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
