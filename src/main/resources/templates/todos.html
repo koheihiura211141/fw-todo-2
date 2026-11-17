@@ -50,6 +50,21 @@
                 </tr>
             </tbody>
         </table>
+        <p class="page-summary" th:if="${todoPage.totalElements > 0}"
+           th:text="|全${todoPage.totalElements}件中 ${startItem}-${endItem}件|">全50件中 1-10件</p>
+        <nav class="pagination" aria-label="ページネーション" th:if="${todoPage.totalPages > 1}">
+            <a class="page-link" th:if="${todoPage.hasPrevious()}"
+               th:href="@{/todos(page=${todoPage.number - 1},keyword=${keyword},category=${category},order=${order})}">前へ</a>
+            <span class="page-link disabled" th:unless="${todoPage.hasPrevious()}">前へ</span>
+            <a class="page-link" th:each="pageNumber : ${#numbers.sequence(0, todoPage.totalPages - 1)}"
+               th:href="@{/todos(page=${pageNumber},keyword=${keyword},category=${category},order=${order})}"
+               th:text="${pageNumber + 1}"
+               th:classappend="${pageNumber == todoPage.number} ? ' active' : ''"
+               th:attr="aria-current=${pageNumber == todoPage.number ? 'page' : null}">1</a>
+            <a class="page-link" th:if="${todoPage.hasNext()}"
+               th:href="@{/todos(page=${todoPage.number + 1},keyword=${keyword},category=${category},order=${order})}">次へ</a>
+            <span class="page-link disabled" th:unless="${todoPage.hasNext()}">次へ</span>
+        </nav>
     </main>
 </body>
 </html>

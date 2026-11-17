@@ -3,9 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.todoapp.TodoMapper">
-    <select id="search" resultType="com.example.todoapp.Todo">
-        SELECT id, title, detail, category, priority, due_date, completed, created_at, updated_at
-        FROM todos
+    <sql id="searchConditions">
         <where>
             <if test="keyword != null and keyword != ''">
                 AND title LIKE CONCAT('%', #{keyword}, '%')
@@ -14,11 +12,21 @@
                 AND category = #{category}
             </if>
         </where>
+    </sql>
+    <select id="searchPage" resultType="com.example.todoapp.Todo">
+        SELECT id, title, detail, category, priority, due_date, completed, created_at, updated_at
+        FROM todos
+        <include refid="searchConditions"/>
         ORDER BY due_date
         <choose>
             <when test="order == 'desc'">DESC</when>
             <otherwise>ASC</otherwise>
         </choose>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countSearch" resultType="long">
+        SELECT COUNT(*) FROM todos
+        <include refid="searchConditions"/>
     </select>
     <select id="findById" resultType="com.example.todoapp.Todo">
         SELECT id, title, detail, category, priority, due_date, completed, created_at, updated_at

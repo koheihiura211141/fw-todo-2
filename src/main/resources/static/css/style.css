@@ -117,3 +117,36 @@ body {
     color: #334155;
     text-decoration: underline;
 }
+
+.page-summary {
+    margin: 0 0 8px;
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.page-link {
+    display: inline-block;
+    min-width: 38px;
+    border: 1px solid #94a3b8;
+    border-radius: 5px;
+    padding: 4px 10px;
+    color: #334155;
+    text-align: center;
+    text-decoration: none;
+}
+
+.page-link.active {
+    border-color: #334155;
+    background: #334155;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.page-link.disabled {
+    color: #94a3b8;
+}

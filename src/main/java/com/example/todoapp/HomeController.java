@@ -1,6 +1,10 @@
 package com.example.todoapp;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
@@ -30,11 +34,23 @@ public class HomeController {
     public String todos(@RequestParam(defaultValue = "") String keyword,
                         @RequestParam(defaultValue = "") String category,
                         @RequestParam(defaultValue = "asc") String order,
+                        @PageableDefault(size = 10) Pageable pageable,
                         Model model) {
         if (!order.equals("desc")) {
             order = "asc";
         }
-        model.addAttribute("todos", todoService.search(keyword, category, order));
+        int pageNumber = Math.max(0, pageable.getPageNumber());
+        pageable = PageRequest.of(pageNumber, 10);
+        Page<Todo> todoPage = todoService.search(keyword, category, order, pageable);
+        if (todoPage.getTotalPages() > 0 && pageNumber >= todoPage.getTotalPages()) {
+            pageNumber = todoPage.getTotalPages() - 1;
+            pageable = PageRequest.of(pageNumber, 10);
+            todoPage = todoService.search(keyword, category, order, pageable);
+        }
+        model.addAttribute("todoPage", todoPage);
+        model.addAttribute("todos", todoPage.getContent());
+        model.addAttribute("startItem", todoPage.getTotalElements() == 0 ? 0 : pageable.getOffset() + 1);
+        model.addAttribute("endItem", pageable.getOffset() + todoPage.getNumberOfElements());
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("order", order);
