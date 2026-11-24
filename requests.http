@@ -1,0 +1,29 @@
+### 1. 1件登録する
+POST http://localhost:8081/api/todos
+Content-Type: application/json
+
+{
+  "title": "Javaの勉強をする",
+  "category": "プログラミング",
+  "priority": 1,
+  "dueDate": "2026-12-01"
+}
+
+### 2. 1件取得する
+GET http://localhost:8081/api/todos/1
+
+### 3. 1件を入れ替える
+PUT http://localhost:8081/api/todos/1
+Content-Type: application/json
+
+{
+  "title": "Javaの復習をする",
+  "detail": null,
+  "category": "プログラミング",
+  "priority": 1,
+  "dueDate": "2026-12-01",
+  "completed": false
+}
+
+### 4. 1件削除する
+DELETE http://localhost:8081/api/todos/1
