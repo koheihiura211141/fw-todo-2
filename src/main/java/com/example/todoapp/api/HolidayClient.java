@@ -3,17 +3,35 @@ package com.example.todoapp.api;
 import java.util.Map;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 @Component
 public class HolidayClient {
-    private final RestClient restClient = RestClient.create();
+    private final RestClient restClient;
 
-    public Map<String, String> fetchHolidays() {
-        return restClient.get()
-                .uri("https://holidays-jp.github.io/api/v1/date.json")
-                .retrieve()
-                .body(new ParameterizedTypeReference<Map<String, String>>() {});
+    public HolidayClient() {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(3000);
+        requestFactory.setReadTimeout(5000);
+        this.restClient = RestClient.builder().requestFactory(requestFactory).build();
+    }
+
+    public record HolidayResult(Map<String, String> holidays, boolean unavailable) {
+    }
+
+    public HolidayResult fetchHolidays() {
+        try {
+            Map<String, String> holidays = restClient.get()
+                    .uri("https://holidays-jp.github.invalid/api/v1/date.json")
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<Map<String, String>>() {
+                    });
+            return new HolidayResult(holidays == null ? Map.of() : holidays, holidays == null);
+        } catch (RestClientException e) {
+            return new HolidayResult(Map.of(), true);
+        }
     }
 }
