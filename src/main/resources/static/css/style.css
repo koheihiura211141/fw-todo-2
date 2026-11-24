@@ -201,3 +201,14 @@ body {
 .calendar-table td span {
     font-weight: bold;
 }
+
+.calendar-navigation-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.calendar-todo-link {
+    display: block;
+    color: inherit;
+}
