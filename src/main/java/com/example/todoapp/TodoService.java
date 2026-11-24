@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,9 +20,14 @@ public class TodoService {
     }
 
     public Page<Todo> search(String keyword, String category, String order, Pageable pageable) {
+        return search(keyword, category, order, null, null, pageable);
+    }
+
+    public Page<Todo> search(String keyword, String category, String order,
+                             LocalDate from, LocalDate to, Pageable pageable) {
         List<Todo> todos = todoMapper.searchPage(
-                keyword, category, order, pageable.getPageSize(), pageable.getOffset());
-        long total = todoMapper.countSearch(keyword, category);
+                keyword, category, order, from, to, pageable.getPageSize(), pageable.getOffset());
+        long total = todoMapper.countSearch(keyword, category, from, to);
         return new PageImpl<>(todos, pageable, total);
     }
 

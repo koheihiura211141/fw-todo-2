@@ -1,10 +1,12 @@
 package com.example.todoapp.api;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +40,13 @@ public class TodoApiController {
     public List<TodoDto> todos(
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "category", defaultValue = "") String category,
-            @RequestParam(name = "order", defaultValue = "asc") String order) {
+            @RequestParam(name = "order", defaultValue = "asc") String order,
+            @RequestParam(name = "from", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(name = "to", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
         // The existing service requires a page; request all entries from the first page.
-        return todoService.search(keyword, category, order, PageRequest.of(0, Integer.MAX_VALUE))
+        return todoService.search(keyword, category, order, from, to, PageRequest.of(0, Integer.MAX_VALUE))
                 .getContent().stream()
                 .map(TodoDto::from)
                 .toList();

@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import java.util.List;
+import java.time.LocalDate;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,10 +11,13 @@ public interface TodoMapper {
     List<Todo> searchPage(@Param("keyword") String keyword,
                           @Param("category") String category,
                           @Param("order") String order,
+                          @Param("from") LocalDate from,
+                          @Param("to") LocalDate to,
                           @Param("limit") int limit,
                           @Param("offset") long offset);
 
-    long countSearch(@Param("keyword") String keyword, @Param("category") String category);
+    long countSearch(@Param("keyword") String keyword, @Param("category") String category,
+                     @Param("from") LocalDate from, @Param("to") LocalDate to);
 
     Todo findById(Long id);
 
