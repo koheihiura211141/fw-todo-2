@@ -3,7 +3,7 @@ POST http://localhost:8081/api/todos
 Content-Type: application/json
 
 {
-  "title": "Javaの勉強をする",
+  "title": "",
   "category": "プログラミング",
   "priority": 1,
   "dueDate": "2026-12-01"
@@ -29,4 +29,7 @@ Content-Type: application/json
 DELETE http://localhost:8081/api/todos/25
 
 ###　追加
-GET http://localhost:8080/api/todos?category=就職活動
+GET http://localhost:8081/api/todos?category=就職活動
+
+### 5. 祝日を直接取ってくる
+GET https://holidays-jp.github.io/api/v1/date.json
