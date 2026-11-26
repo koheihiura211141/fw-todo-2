@@ -88,6 +88,25 @@ class AuthenticationTests {
         verify(samples, times(1)).initialize(1L);
     }
 
+    @Test void authenticatedUserCanRenderListAndKanban() throws Exception {
+        AppUser account = new AppUser();
+        account.setId(1L); account.setUsername("alice"); account.setPassword("unused"); account.setRole("USER");
+        LoginUser principal = new LoginUser(account);
+        Todo todo = new Todo();
+        todo.setId(10L); todo.setUserId(1L); todo.setTitle("Board regression");
+        todo.setCategory("Test"); todo.setPriority(2); todo.setCompleted(false);
+        todo.setStatus(TodoStatus.IN_PROGRESS);
+        TodoService service = context.getBean(TodoService.class);
+        when(service.search(anyString(), anyString(), anyString(), any(), any(), any(), any(), any()))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(java.util.List.of(todo)));
+        when(service.search(anyString(), anyString(), anyString(), any(org.springframework.data.domain.Pageable.class)))
+                .thenReturn(new org.springframework.data.domain.PageImpl<>(java.util.List.of(todo)));
+        mvc.perform(get("/todos").with(user(principal)))
+                .andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Board regression")));
+        mvc.perform(get("/todos/kanban").with(user(principal)))
+                .andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Board regression")));
+    }
+
     @Test void guestLoginIsUnavailableAndOldGuestSessionsAreDenied() throws Exception {
         mvc.perform(post("/guest").with(csrf())).andExpect(status().is3xxRedirection());
         mvc.perform(get("/todos").with(user("guest").roles("GUEST")))

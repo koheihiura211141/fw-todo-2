@@ -31,6 +31,8 @@ public interface TodoMapper {
 
     int updateCompleted(@Param("id") Long id, @Param("completed") boolean completed, @Param("userId") Long userId);
 
+    int updateStatus(@Param("id") Long id, @Param("status") TodoStatus status, @Param("userId") Long userId);
+
     int deleteById(@Param("id") Long id, @Param("userId") Long userId);
 
     int deleteByIds(@Param("ids") List<Long> ids, @Param("userId") Long userId);

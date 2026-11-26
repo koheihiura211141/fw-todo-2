@@ -16,6 +16,7 @@ public class TodoDto {
     private Integer priority;
     private LocalDate dueDate;
     private Boolean completed;
+    private com.example.todoapp.TodoStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -28,6 +29,7 @@ public class TodoDto {
         dto.priority = todo.getPriority();
         dto.dueDate = todo.getDueDate();
         dto.completed = todo.getCompleted();
+        dto.status = todo.getStatus();
         dto.createdAt = todo.getCreatedAt();
         dto.updatedAt = todo.getUpdatedAt();
         return dto;

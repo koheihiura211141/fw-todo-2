@@ -99,6 +99,41 @@ class TodoOwnershipTests {
         verify(mapper).searchPage("", "", "asc", "deadline", null, null, null, null, 10, 0L, 1L);
         verify(mapper).countSearch("", "", null, null, null, null, 1L);
     }
+    @Test void kanbanStatusUpdatesRequireCsrfAndOwnership() throws Exception {
+        mvc.perform(patch("/api/todos/10/status").with(user(alice))
+                .contentType("application/json").content("{\"status\":\"IN_PROGRESS\"}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(patch("/api/todos/20/status").with(user(alice)).with(csrf())
+                .contentType("application/json").content("{\"status\":\"DONE\"}"))
+                .andExpect(status().isForbidden());
+        verify(mapper, never()).updateStatus(any(), any(), any());
+        when(mapper.updateStatus(10L, TodoStatus.IN_PROGRESS, 1L)).thenAnswer(invocation -> {
+            mapper.findById(10L).setStatus(TodoStatus.IN_PROGRESS);
+            return 1;
+        });
+        mvc.perform(patch("/api/todos/10/status").with(user(alice)).with(csrf())
+                .contentType("application/json").content("{\"status\":\"IN_PROGRESS\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("IN_PROGRESS"));
+        verify(mapper).updateStatus(10L, TodoStatus.IN_PROGRESS, 1L);
+    }
+    @Test void kanbanStatusRejectsInvalidAndMissingTasks() throws Exception {
+        for (String body : List.of("{}", "{\"status\":null}", "{\"status\":\"UNKNOWN\"}")) {
+            mvc.perform(patch("/api/todos/10/status").with(user(alice)).with(csrf())
+                    .contentType("application/json").content(body)).andExpect(status().isBadRequest());
+        }
+        mvc.perform(patch("/api/todos/99/status").with(user(alice)).with(csrf())
+                .contentType("application/json").content("{\"status\":\"DONE\"}"))
+                .andExpect(status().isNotFound());
+        verify(mapper, never()).updateStatus(any(), any(), any());
+    }
+    @Test void legacyCompletionTakesPrecedenceOverStoredStatus() {
+        Todo todo = new Todo();
+        assertEquals(TodoStatus.NOT_STARTED, todo.getStatus());
+        todo.setStatus(TodoStatus.IN_PROGRESS);
+        assertEquals(TodoStatus.IN_PROGRESS, todo.getStatus());
+        todo.setCompleted(true);
+        assertEquals(TodoStatus.DONE, todo.getStatus());
+    }
     @Test void serviceRejectsMissingIdentityIncludingMcpCalls() {
         assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> service.findById(10L));
         assertThrows(org.springframework.security.access.AccessDeniedException.class, () -> service.create(new Todo()));

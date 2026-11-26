@@ -96,6 +96,17 @@ public class TodoApiController {
         return TodoDto.from(findTodoOrThrow(id));
     }
 
+    public record StatusRequest(@jakarta.validation.constraints.NotNull com.example.todoapp.TodoStatus status) {}
+
+    @org.springframework.web.bind.annotation.PatchMapping("/api/todos/{id}/status")
+    public TodoDto updateStatus(@PathVariable("id") Long id, @Valid @RequestBody StatusRequest request) {
+        findTodoOrThrow(id);
+        if (todoService.updateStatus(id, request.status()) == 0) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return TodoDto.from(findTodoOrThrow(id));
+    }
+
     @DeleteMapping("/api/todos/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         findTodoOrThrow(id);

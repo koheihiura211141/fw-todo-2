@@ -27,7 +27,7 @@
         </where>
     </sql>
     <select id="searchPage" resultType="com.example.todoapp.Todo">
-        SELECT id, user_id, title, detail, category, priority, due_date AS deadline, completed, created_at, updated_at
+        SELECT id, user_id, title, detail, category, priority, due_date AS deadline, completed, status, created_at, updated_at
         FROM todos
         <include refid="searchConditions"/>
         ORDER BY
@@ -50,13 +50,13 @@
         <include refid="searchConditions"/>
     </select>
     <select id="findById" resultType="com.example.todoapp.Todo">
-        SELECT id, user_id, title, detail, category, priority, due_date AS deadline, completed, created_at, updated_at
+        SELECT id, user_id, title, detail, category, priority, due_date AS deadline, completed, status, created_at, updated_at
         FROM todos
         WHERE id = #{id}
     </select>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO todos (user_id, title, detail, category, priority, due_date, completed)
-        VALUES (#{userId}, #{title}, #{detail}, #{category}, #{priority}, #{deadline}, COALESCE(#{completed}, FALSE))
+        INSERT INTO todos (user_id, title, detail, category, priority, due_date, completed, status)
+        VALUES (#{userId}, #{title}, #{detail}, #{category}, #{priority}, #{deadline}, COALESCE(#{completed}, FALSE), CASE WHEN #{completed} THEN 'DONE' ELSE 'NOT_STARTED' END)
     </insert>
     <update id="update">
         UPDATE todos
@@ -65,11 +65,17 @@
             category = #{category},
             priority = #{priority},
             due_date = #{deadline},
+            status = CASE WHEN #{completed} = TRUE THEN 'DONE'
+                          WHEN status = 'IN_PROGRESS' THEN 'IN_PROGRESS' ELSE 'NOT_STARTED' END,
             completed = #{completed}
         WHERE id = #{id} AND user_id = #{userId}
     </update>
     <update id="updateCompleted">
-        UPDATE todos SET completed = #{completed} WHERE id = #{id} AND user_id = #{userId}
+        UPDATE todos SET completed = #{completed}, status = CASE WHEN #{completed} THEN 'DONE' ELSE 'NOT_STARTED' END WHERE id = #{id} AND user_id = #{userId}
+    </update>
+    <update id="updateStatus">
+        UPDATE todos SET status = #{status}, completed = (#{status} = 'DONE')
+        WHERE id = #{id} AND user_id = #{userId}
     </update>
     <delete id="deleteById">
         DELETE FROM todos

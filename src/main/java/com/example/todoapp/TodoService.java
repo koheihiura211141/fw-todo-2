@@ -70,6 +70,11 @@ public class TodoService {
         return result;
     }
 
+    public int updateStatus(Long id, TodoStatus status) {
+        findById(id);
+        return todoMapper.updateStatus(id, status, currentUserId());
+    }
+
     public int updateCompleted(Long id, boolean completed) {
         findById(id);
         return todoMapper.updateCompleted(id, completed, currentUserId());

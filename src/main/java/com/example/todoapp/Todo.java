@@ -39,6 +39,12 @@ public class Todo {
     }
 
     private Boolean completed;
+    private TodoStatus status;
+
+    public TodoStatus getStatus() {
+        if (Boolean.TRUE.equals(completed)) return TodoStatus.DONE;
+        return status == TodoStatus.IN_PROGRESS ? status : TodoStatus.NOT_STARTED;
+    }
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

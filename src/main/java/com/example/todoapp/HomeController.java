@@ -40,6 +40,14 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/todos/kanban")
+    public String kanban(Model model) {
+        model.addAttribute("todos", todoService.search("", "", "asc",
+                PageRequest.of(0, Integer.MAX_VALUE)).getContent());
+        model.addAttribute("statuses", TodoStatus.values());
+        return "kanban";
+    }
+
     @GetMapping("/todos")
     public String todos(@RequestParam(defaultValue = "") String keyword,
                         @RequestParam(defaultValue = "") String category,
