@@ -2,6 +2,18 @@
     box-sizing: border-box;
 }
 
+.bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 body {
     margin: 0;
     color: #1c4658;
@@ -46,6 +58,28 @@ body {
 .todo-table th:last-child,
 .todo-table td:last-child {
     white-space: nowrap;
+}
+
+.todo-table .todo-operations {
+    white-space: nowrap;
+}
+
+.todo-table .todo-selection {
+    width: 1%;
+    text-align: center;
+}
+
+.select-all-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.select-all-label input {
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .flash {

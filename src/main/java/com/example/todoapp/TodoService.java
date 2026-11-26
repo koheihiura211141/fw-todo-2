@@ -53,6 +53,15 @@ public class TodoService {
         return result;
     }
 
+    public int deleteAll(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return 0;
+        }
+        int result = todoMapper.deleteByIds(ids);
+        log.info("一括削除: ids={}, count={}", ids, result);
+        return result;
+    }
+
     public int delete(Long id) {
         int result = todoMapper.deleteById(id);
         log.info("削除: id={}", id);

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-7" th:href="@{/css/style.css(v='20261126-7')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-8" th:href="@{/css/style.css(v='20261126-8')}">
 </head>
 <body>
     <main class="container">
@@ -32,6 +32,13 @@
             <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or order == 'desc'}">条件をクリア</a>
         </form>
         <p th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
+        <form id="bulk-delete-form" th:action="@{/todos/bulk-delete}" method="post">
+            <div class="bulk-actions">
+                <button id="bulk-delete-button" class="btn" type="submit" disabled>選択した項目を削除</button>
+                <span id="selection-count" role="status">0件選択中</span>
+                <span>全選択はこのページの項目が対象です</span>
+            </div>
+        </form>
         <table class="todo-table">
             <thead>
                 <tr>
@@ -60,7 +67,8 @@
                             <option value="true" th:selected="${completed == true}">完了</option>
                         </select>
                     </th>
-                    <th>操作</th>
+                    <th class="todo-operations">操作</th>
+                    <th class="todo-selection"><label class="select-all-label"><input id="select-all" type="checkbox" th:disabled="${#lists.isEmpty(todos)}"> 全選択</label></th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +84,9 @@
                         <span class="deadline-warning" th:if="${upcoming}">3日以内</span>
                     </td>
                     <td th:text="${todo.completed ? '完了' : '未完了'}">状態</td>
-                    <td><a class="link" th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a> <a class="link" th:href="@{/todos/{id}/delete(id=${todo.id})}">削除</a></td>
+                    <td class="todo-operations"><a class="link" th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a> <a class="link" th:href="@{/todos/{id}/delete(id=${todo.id})}">削除</a></td>
+                    <td class="todo-selection"><input class="todo-select" type="checkbox" name="ids" th:value="${todo.id}"
+                               form="bulk-delete-form" th:attr="aria-label=|${todo.title}を選択|"></td>
                 </tr>
             </tbody>
         </table>
@@ -96,5 +106,6 @@
             <span class="page-link disabled" th:unless="${todoPage.hasNext()}">次へ</span>
         </nav>
     </main>
+    <script src="/js/todo-selection.js" th:src="@{/js/todo-selection.js}" defer></script>
 </body>
 </html>

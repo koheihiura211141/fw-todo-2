@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Page;
@@ -141,6 +142,15 @@ public class HomeController {
         }
         model.addAttribute("todo", todo);
         return "delete";
+    }
+
+    @PostMapping("/todos/bulk-delete")
+    public String deleteSelectedTodos(@RequestParam(name = "ids", required = false) List<Long> ids,
+                                      RedirectAttributes redirectAttributes) {
+        int deleted = todoService.deleteAll(ids);
+        redirectAttributes.addFlashAttribute("message", deleted > 0
+                ? deleted + "件削除しました" : "削除対象が選択されていないか、既に削除されています");
+        return "redirect:/todos";
     }
 
     @PostMapping("/todos/{id}/delete")

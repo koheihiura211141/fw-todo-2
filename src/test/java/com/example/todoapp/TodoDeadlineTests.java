@@ -57,6 +57,11 @@ class TodoDeadlineTests {
         assertTrue(html.contains(today.toString().replace('-', '/')));
         assertTrue(html.contains("期限切れ"));
         assertTrue(html.contains("（入力なし）"));
+        assertTrue(html.contains("action=\"/todos/bulk-delete\""));
+        assertTrue(html.contains("id=\"select-all\""));
+        assertEquals(5, html.split("class=\"todo-select\"", -1).length - 1);
+        assertTrue(html.contains("form=\"bulk-delete-form\""));
+        assertTrue(html.contains("/js/todo-selection.js"));
     }
 
     @Test
