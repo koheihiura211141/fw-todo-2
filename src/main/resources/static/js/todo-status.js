@@ -36,7 +36,7 @@
             if (todo.completed && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 const animations = Array.from(button.querySelectorAll('path'), path =>
                     path.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
-                        duration: 840, easing: 'ease-in-out', fill: 'both'
+                        duration: 420, easing: 'ease-in-out', fill: 'both'
                     }));
                 await Promise.all(animations.map(animation => animation.finished));
                 animations.forEach(animation => animation.cancel());

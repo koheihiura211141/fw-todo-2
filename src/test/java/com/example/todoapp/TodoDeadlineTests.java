@@ -62,7 +62,9 @@ class TodoDeadlineTests {
         assertEquals(5, html.split("class=\"todo-select\"", -1).length - 1);
         assertTrue(html.contains("form=\"bulk-delete-form\""));
         assertTrue(html.contains("/js/todo-selection.js"));
-        assertFalse(html.contains("<select"));
+        assertTrue(html.contains("name=\"category\""));
+        assertTrue(html.contains("type=\"date\""));
+        assertTrue(html.contains(">絞り込み</button>"));
         assertTrue(html.contains("aria-sort=\"ascending\""));
         assertTrue(html.contains("sortBy=deadline&amp;order=desc"));
         String sorted = mvc.perform(get("/todos").param("sortBy", "title").param("order", "desc"))
@@ -71,6 +73,19 @@ class TodoDeadlineTests {
         assertTrue(sorted.contains("sortBy=title&amp;order=asc"));
         verify(service).search(eq(""), eq(""), eq("desc"), isNull(), isNull(), isNull(), isNull(),
                 argThat(page -> page.getSort().getOrderFor("title") != null));
+        when(service.search(anyString(), anyString(), anyString(), nullable(Integer.class), nullable(Boolean.class),
+                nullable(LocalDate.class), nullable(LocalDate.class), any()))
+                .thenReturn(new PageImpl<>(todos, PageRequest.of(0, 10), 15));
+        String filtered = mvc.perform(get("/todos").param("keyword", "Task")
+                .param("category", "デザイン").param("priority", "1").param("completed", "false")
+                .param("from", "2026-12-01").param("to", "2026-12-31"))
+                .andReturn().getResponse().getContentAsString();
+        verify(service).search(eq("Task"), eq("デザイン"), eq("asc"), eq(1), eq(false),
+                eq(LocalDate.of(2026, 12, 1)), eq(LocalDate.of(2026, 12, 31)), any());
+        assertTrue(filtered.contains("value=\"2026-12-01\""));
+        assertTrue(filtered.contains("value=\"2026-12-31\""));
+        assertTrue(filtered.contains("value=\"false\" selected=\"selected\""));
+        assertEquals(8, filtered.split("from=2026-12-01&amp;to=2026-12-31", -1).length - 1);
     }
 
     @Test

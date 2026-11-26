@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,8 @@ public class HomeController {
                         @RequestParam(defaultValue = "deadline") String sortBy,
                         @RequestParam(required = false) Integer priority,
                         @RequestParam(required = false) Boolean completed,
+                        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+                        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
                         @PageableDefault(size = 10) Pageable pageable,
                         Model model) {
         if (!order.equals("desc")) {
@@ -52,11 +55,11 @@ public class HomeController {
         Sort sort = Sort.by(sortBy);
         int pageNumber = Math.max(0, pageable.getPageNumber());
         pageable = PageRequest.of(pageNumber, 10, sort);
-        Page<Todo> todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
+        Page<Todo> todoPage = todoService.search(keyword, category, order, priority, completed, from, to, pageable);
         if (todoPage.getTotalPages() > 0 && pageNumber >= todoPage.getTotalPages()) {
             pageNumber = todoPage.getTotalPages() - 1;
             pageable = PageRequest.of(pageNumber, 10, sort);
-            todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
+            todoPage = todoService.search(keyword, category, order, priority, completed, from, to, pageable);
         }
         model.addAttribute("todoPage", todoPage);
         model.addAttribute("todos", todoPage.getContent());
@@ -71,6 +74,8 @@ public class HomeController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("priority", priority);
         model.addAttribute("completed", completed);
+        model.addAttribute("from", from);
+        model.addAttribute("to", to);
         return "todos";
     }
 
