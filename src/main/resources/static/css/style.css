@@ -312,3 +312,17 @@ body {
     cursor: pointer;
 }
 .column-filter option { color: #222; background: #fff; }
+
+.todo-table .deadline-overdue td {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.todo-table .deadline-upcoming td {
+    background-color: #fef3c7;
+    color: #713f12;
+}
+.deadline-warning {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+}

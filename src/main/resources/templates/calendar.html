@@ -8,7 +8,7 @@
 </head>
 <body>
     <main class="container">
-        <div class="page-heading"><h1 class="page-title" id="calendar-title" th:text="|${year}年${month}月|">2026年4月</h1><img class="title-image" src="/images/todo-person.png" alt="" width="88" height="72"></div>
+        <div class="page-heading"><h1 class="page-title" id="calendar-title" th:text="|${year}年${month}月|">2026年4月</h1><img class="title-image" src="/images/todo-calendar.png" alt="" width="88" height="72"></div>
         <nav class="calendar-navigation" aria-label="カレンダーの操作">
             <div class="calendar-navigation-group">
                 <a class="link" th:href="@{/calendar(year=${previousMonth.year},month=${previousMonth.monthValue})}">前の月</a>

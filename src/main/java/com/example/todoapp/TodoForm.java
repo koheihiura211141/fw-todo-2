@@ -28,7 +28,17 @@ public class TodoForm {
     @NotNull(message = "優先度を選択してください")
     private Integer priority;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dueDate;
+    private LocalDate deadline;
+
+    /** Alias for existing API clients and calendar integration. */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    public LocalDate getDueDate() {
+        return deadline;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.deadline = dueDate;
+    }
     private Boolean completed;
 
     public Todo toTodo() {
@@ -37,7 +47,7 @@ public class TodoForm {
         todo.setDetail(detail);
         todo.setCategory(category);
         todo.setPriority(priority);
-        todo.setDueDate(dueDate);
+        todo.setDeadline(deadline);
         todo.setCompleted(completed);
         return todo;
     }
@@ -48,7 +58,7 @@ public class TodoForm {
         form.setDetail(todo.getDetail());
         form.setCategory(todo.getCategory());
         form.setPriority(todo.getPriority());
-        form.setDueDate(todo.getDueDate());
+        form.setDeadline(todo.getDeadline());
         form.setCompleted(todo.getCompleted());
         return form;
     }

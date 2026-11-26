@@ -8,7 +8,7 @@
 </head>
 <body>
     <main class="container">
-        <div class="page-heading"><h1 class="page-title">やることを編集</h1><img class="title-image" src="/images/todo-person.png" alt="" width="88" height="72"></div>
+        <div class="page-heading"><h1 class="page-title">やることを編集</h1><img class="title-image" src="/images/todo-edit.png" alt="" width="88" height="72"></div>
         <form method="post" th:action="@{/todos/{id}/confirm(id=${todoId})}" th:object="${todo}">
             <div class="form-row">
                 <label class="form-label" for="author">作成者</label>
@@ -48,8 +48,9 @@
                 <p class="error" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></p>
             </div>
             <div class="form-row">
-                <label class="form-label" for="dueDate">期限</label>
-                <input class="form-input" id="dueDate" type="date" th:field="*{dueDate}">
+                <label class="form-label" for="deadline">期限</label>
+                <input class="form-input" id="deadline" type="date" th:field="*{deadline}">
+                <p class="error" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></p>
             </div>
             <div class="form-row">
                 <label class="form-label" for="completed">完了</label>

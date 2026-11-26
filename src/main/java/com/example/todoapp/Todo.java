@@ -25,7 +25,17 @@ public class Todo {
     private Integer priority;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dueDate;
+    private LocalDate deadline;
+
+    /** Alias for existing API clients and calendar integration. */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    public LocalDate getDueDate() {
+        return deadline;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.deadline = dueDate;
+    }
 
     private Boolean completed;
     private LocalDateTime createdAt;

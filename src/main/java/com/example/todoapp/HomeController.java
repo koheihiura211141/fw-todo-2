@@ -1,5 +1,7 @@
 package com.example.todoapp;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +53,9 @@ public class HomeController {
         }
         model.addAttribute("todoPage", todoPage);
         model.addAttribute("todos", todoPage.getContent());
+        LocalDate today = LocalDate.now();
+        model.addAttribute("today", today);
+        model.addAttribute("warningDate", today.plusDays(3));
         model.addAttribute("startItem", todoPage.getTotalElements() == 0 ? 0 : pageable.getOffset() + 1);
         model.addAttribute("endItem", pageable.getOffset() + todoPage.getNumberOfElements());
         model.addAttribute("keyword", keyword);
