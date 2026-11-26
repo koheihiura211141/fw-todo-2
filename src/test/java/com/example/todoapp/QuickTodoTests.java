@@ -31,6 +31,7 @@ class QuickTodoTests {
     @EnableWebSecurity
     @Import({SecurityConfig.class, TodoApiController.class})
     static class Config {
+        @Bean SampleTodoService samples() { return mock(SampleTodoService.class); }
         @Bean TodoService todoService() { return mock(TodoService.class); }
     }
 

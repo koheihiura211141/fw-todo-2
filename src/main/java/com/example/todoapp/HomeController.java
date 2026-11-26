@@ -29,6 +29,11 @@ public class HomeController {
         this.todoService = todoService;
     }
 
+    @ModelAttribute("currentUser")
+    public LoginUser currentUser(@org.springframework.security.core.annotation.AuthenticationPrincipal LoginUser user) {
+        return user;
+    }
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("title", "やること管理");
@@ -63,7 +68,7 @@ public class HomeController {
         }
         model.addAttribute("todoPage", todoPage);
         model.addAttribute("todos", todoPage.getContent());
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"));
         model.addAttribute("today", today);
         model.addAttribute("warningDate", today.plusDays(3));
         model.addAttribute("startItem", todoPage.getTotalElements() == 0 ? 0 : pageable.getOffset() + 1);
@@ -121,6 +126,7 @@ public class HomeController {
 
     @PostMapping("/todos/{id}/confirm")
     public String confirmEditTodo(@PathVariable Long id, @Valid @ModelAttribute("todo") TodoForm todo, BindingResult bindingResult, Model model) {
+        todoService.findById(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("todoId", id);
             return "edit";
@@ -141,6 +147,7 @@ public class HomeController {
 
     @PostMapping("/todos/{id}/edit")
     public String rewriteEditTodo(@PathVariable Long id, @ModelAttribute("todo") TodoForm todo, Model model) {
+        todoService.findById(id);
         model.addAttribute("todo", todo);
         model.addAttribute("todoId", id);
         return "edit";

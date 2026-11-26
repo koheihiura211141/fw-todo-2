@@ -4,3 +4,24 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(60) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER'
 );
+
+CREATE TABLE IF NOT EXISTS sample_todo_initializations (
+    user_id BIGINT NOT NULL PRIMARY KEY,
+    initialized_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_sample_todo_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS todos (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    detail VARCHAR(255),
+    category VARCHAR(255) NOT NULL,
+    priority INT NOT NULL DEFAULT 2,
+    due_date DATE,
+    completed BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_todos_user_id (user_id),
+    CONSTRAINT fk_todos_user FOREIGN KEY (user_id) REFERENCES users(id)
+);

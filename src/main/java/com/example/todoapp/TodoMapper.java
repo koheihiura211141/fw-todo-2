@@ -17,11 +17,11 @@ public interface TodoMapper {
                           @Param("from") LocalDate from,
                           @Param("to") LocalDate to,
                           @Param("limit") int limit,
-                          @Param("offset") long offset);
+                          @Param("offset") long offset, @Param("userId") Long userId);
 
     long countSearch(@Param("keyword") String keyword, @Param("category") String category,
                      @Param("priority") Integer priority, @Param("completed") Boolean completed,
-                     @Param("from") LocalDate from, @Param("to") LocalDate to);
+                     @Param("from") LocalDate from, @Param("to") LocalDate to, @Param("userId") Long userId);
 
     Todo findById(Long id);
 
@@ -29,9 +29,9 @@ public interface TodoMapper {
 
     int update(Todo todo);
 
-    int updateCompleted(@Param("id") Long id, @Param("completed") boolean completed);
+    int updateCompleted(@Param("id") Long id, @Param("completed") boolean completed, @Param("userId") Long userId);
 
-    int deleteById(Long id);
+    int deleteById(@Param("id") Long id, @Param("userId") Long userId);
 
-    int deleteByIds(@Param("ids") List<Long> ids);
+    int deleteByIds(@Param("ids") List<Long> ids, @Param("userId") Long userId);
 }

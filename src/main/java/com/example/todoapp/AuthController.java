@@ -1,18 +1,8 @@
 package com.example.todoapp;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
-import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,22 +36,4 @@ public class AuthController {
         return "redirect:/login?registered";
     }
 
-    @PostMapping("/guest")
-    public String guest(HttpServletRequest request, HttpServletResponse response) {
-        var current = SecurityContextHolder.getContext().getAuthentication();
-        if (current != null && current.isAuthenticated()
-                && !(current instanceof org.springframework.security.authentication.AnonymousAuthenticationToken)) {
-            return "redirect:/todos";
-        }
-        var authentication = UsernamePasswordAuthenticationToken.authenticated("ゲスト", null,
-                List.of(new SimpleGrantedAuthority("ROLE_GUEST")));
-        new ChangeSessionIdAuthenticationStrategy().onAuthentication(authentication, request, response);
-        new CsrfAuthenticationStrategy(new HttpSessionCsrfTokenRepository())
-                .onAuthentication(authentication, request, response);
-        var context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-        new HttpSessionSecurityContextRepository().saveContext(context, request, response);
-        return "redirect:/todos";
-    }
 }

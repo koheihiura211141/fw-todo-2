@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class TodoDeadlineTests {
     @Test
     void rendersDeadlineWarningsAtBoundariesAndHandlesMissingDates() throws Exception {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(java.time.ZoneId.of("Asia/Tokyo"));
         List<Todo> todos = java.util.stream.Stream.of(
                 today.minusDays(1), today, today.plusDays(3), today.plusDays(4), null)
                 .map(date -> {
@@ -47,7 +47,7 @@ class TodoDeadlineTests {
         views.setTemplateEngine(engine);
         views.setCharacterEncoding("UTF-8");
         var mvc = MockMvcBuilders.standaloneSetup(new HomeController(service))
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(), new org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver())
                 .setViewResolvers(views).build();
         var response = mvc.perform(get("/todos").locale(Locale.JAPAN)).andReturn().getResponse();
         assertEquals(200, response.getStatus());

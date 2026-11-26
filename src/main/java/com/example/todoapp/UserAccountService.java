@@ -1,6 +1,6 @@
 package com.example.todoapp;
 
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,8 +21,7 @@ public class UserAccountService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         AppUser user = users.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException("User not found");
-        return User.withUsername(user.getUsername()).password(user.getPassword())
-                .roles(user.getRole()).build();
+        return new LoginUser(user);
     }
 
     public void register(String username, String password) {

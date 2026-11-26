@@ -3,7 +3,6 @@
 <body>
 <nav th:fragment="account" class="account-bar" aria-label="アカウント" sec:authorize="isAuthenticated()">
     <span><span sec:authentication="name">ユーザー</span> として利用中</span>
-    <a sec:authorize="hasRole('GUEST')" th:href="@{/login}">ログイン・登録</a>
     <form th:action="@{/logout}" method="post"><button class="btn sub" type="submit">ログアウト</button></form>
 </nav>
 </body>

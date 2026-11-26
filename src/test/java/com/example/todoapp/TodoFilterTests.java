@@ -45,6 +45,7 @@ class TodoFilterTests {
             var mapped = configuration.getMappedStatement("com.example.todoapp.TodoMapper." + statement);
             var bound = mapped.getBoundSql(filters);
             String sql = bound.getSql().replaceAll("\\s+", " ");
+            assertTrue(sql.contains("user_id = ?"));
             assertTrue(sql.contains("category = ?"));
             assertTrue(sql.contains("priority = ?"));
             assertTrue(sql.contains("completed = ?"));
