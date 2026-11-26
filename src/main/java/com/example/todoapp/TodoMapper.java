@@ -23,6 +23,9 @@ public interface TodoMapper {
                      @Param("priority") Integer priority, @Param("completed") Boolean completed,
                      @Param("from") LocalDate from, @Param("to") LocalDate to, @Param("userId") Long userId);
 
+    List<TaskCount> countByCategory(@Param("userId") Long userId);
+    List<TaskCount> countByPriority(@Param("userId") Long userId);
+
     Todo findById(Long id);
 
     int insert(Todo todo);

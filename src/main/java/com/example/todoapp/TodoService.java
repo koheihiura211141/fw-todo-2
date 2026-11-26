@@ -46,6 +46,14 @@ public class TodoService {
         return new PageImpl<>(todos, pageable, total);
     }
 
+    public List<TaskCount> countByCategory() {
+        return todoMapper.countByCategory(currentUserId());
+    }
+
+    public List<TaskCount> countByPriority() {
+        return todoMapper.countByPriority(currentUserId());
+    }
+
     public Todo findById(Long id) {
         Long userId = currentUserId();
         Todo todo = todoMapper.findById(id);

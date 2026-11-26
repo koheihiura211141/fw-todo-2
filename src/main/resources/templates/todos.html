@@ -6,7 +6,7 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-17" th:href="@{/css/style.css(v='20261126-17')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-21" th:href="@{/css/style.css(v='20261126-21')}">
 </head>
 <body>
     <div th:replace="~{fragments/account :: account}"></div>
@@ -19,6 +19,23 @@
                 <a class="btn" href="/todos/new">新規登録</a>
             </nav>
         </header>
+        <section id="todo-statistics" class="todo-statistics" aria-label="タスクの分布"
+                 th:attr="data-category-url=@{/api/todos/stats/categories},data-priority-url=@{/api/todos/stats/priorities}">
+            <p>全タスクの分布（検索条件に関係なく集計）</p>
+            <p id="statistics-status" role="status" aria-live="polite">グラフを読み込み中…</p>
+            <div class="statistics-grid">
+                <article class="statistics-card">
+                    <h2>カテゴリ別</h2>
+                    <div class="statistics-canvas"><canvas id="category-chart" role="img" aria-label="カテゴリ別タスク数"></canvas></div>
+                    <ul id="category-summary" class="statistics-badges" aria-label="カテゴリ別の件数"></ul>
+                </article>
+                <article class="statistics-card">
+                    <h2>優先度別</h2>
+                    <div class="statistics-canvas"><canvas id="priority-chart" role="img" aria-label="優先度別タスク数"></canvas></div>
+                    <ul id="priority-summary" class="statistics-badges statistics-badges-priority" aria-label="優先度別の件数"></ul>
+                </article>
+            </div>
+        </section>
         <form id="quick-todo-form" class="quick-todo-bar" th:action="@{/api/todo}" method="post" novalidate>
             <label for="quick-todo-title">タスクをクイック追加</label>
             <div class="quick-todo-controls">
@@ -136,6 +153,8 @@
         </nav>
     </main>
     <p id="todo-status-error" class="quick-todo-error" role="alert" hidden></p>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+    <script src="/js/todo-statistics.js?v=20261126-21" th:src="@{/js/todo-statistics.js(v='20261126-21')}" defer></script>
     <script src="/js/todo-sort.js" th:src="@{/js/todo-sort.js}" defer></script>
     <script src="/js/todo-status.js" th:src="@{/js/todo-status.js}" defer></script>
     <script src="/js/todo-selection.js" th:src="@{/js/todo-selection.js}" defer></script>

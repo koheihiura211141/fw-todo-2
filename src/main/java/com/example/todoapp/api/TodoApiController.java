@@ -51,6 +51,16 @@ public class TodoApiController {
                 .map(TodoDto::from)
                 .toList();
     }
+    @GetMapping("/api/todos/stats/categories")
+    public List<com.example.todoapp.TaskCount> categoryCounts() {
+        return todoService.countByCategory();
+    }
+
+    @GetMapping("/api/todos/stats/priorities")
+    public List<com.example.todoapp.TaskCount> priorityCounts() {
+        return todoService.countByPriority();
+    }
+
     @GetMapping("/api/todos/{id}")
     public TodoDto findById(@PathVariable("id") Long id) {
         return TodoDto.from(findTodoOrThrow(id));

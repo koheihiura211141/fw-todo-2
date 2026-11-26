@@ -49,6 +49,21 @@
         SELECT COUNT(*) FROM todos
         <include refid="searchConditions"/>
     </select>
+    <select id="countByCategory" resultType="com.example.todoapp.TaskCount">
+        SELECT COALESCE(NULLIF(TRIM(category), ''), '未分類') AS label, COUNT(*) AS count
+        FROM todos WHERE user_id = #{userId}
+        GROUP BY COALESCE(NULLIF(TRIM(category), ''), '未分類')
+        ORDER BY label
+    </select>
+    <select id="countByPriority" resultType="com.example.todoapp.TaskCount">
+        SELECT levels.label, COUNT(t.id) AS count
+        FROM (SELECT 1 AS priority, 'HIGH' AS label
+              UNION ALL SELECT 2, 'MEDIUM'
+              UNION ALL SELECT 3, 'LOW') levels
+        LEFT JOIN todos t ON t.priority = levels.priority AND t.user_id = #{userId}
+        GROUP BY levels.priority, levels.label
+        ORDER BY levels.priority
+    </select>
     <select id="findById" resultType="com.example.todoapp.Todo">
         SELECT id, user_id, title, detail, category, priority, due_date AS deadline, completed, status, created_at, updated_at
         FROM todos

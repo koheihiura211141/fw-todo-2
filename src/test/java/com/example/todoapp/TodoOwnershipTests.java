@@ -126,6 +126,30 @@ class TodoOwnershipTests {
                 .andExpect(status().isNotFound());
         verify(mapper, never()).updateStatus(any(), any(), any());
     }
+    @Test void statisticsAreScopedToAuthenticatedUser() throws Exception {
+        when(mapper.countByCategory(1L)).thenReturn(List.of(new TaskCount("仕事", 4)));
+        when(mapper.countByPriority(1L)).thenReturn(List.of(
+                new TaskCount("HIGH", 1), new TaskCount("MEDIUM", 3), new TaskCount("LOW", 0)));
+        mvc.perform(get("/api/todos/stats/categories").with(user(alice)))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].label").value("仕事"))
+                .andExpect(jsonPath("$[0].count").value(4));
+        mvc.perform(get("/api/todos/stats/priorities").with(user(alice)))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[2].label").value("LOW"))
+                .andExpect(jsonPath("$[2].count").value(0));
+        verify(mapper).countByCategory(1L);
+        verify(mapper).countByPriority(1L);
+    }
+    @Test void statisticsRequireLogin() throws Exception {
+        mvc.perform(get("/api/todos/stats/categories")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/todos/stats/priorities")).andExpect(status().isUnauthorized());
+        verify(mapper, never()).countByCategory(any());
+        verify(mapper, never()).countByPriority(any());
+    }
+    @Test void emptyCategoryStatisticsReturnEmptyArray() throws Exception {
+        when(mapper.countByCategory(1L)).thenReturn(List.of());
+        mvc.perform(get("/api/todos/stats/categories").with(user(alice)))
+                .andExpect(status().isOk()).andExpect(content().json("[]"));
+    }
     @Test void legacyCompletionTakesPrecedenceOverStoredStatus() {
         Todo todo = new Todo();
         assertEquals(TodoStatus.NOT_STARTED, todo.getStatus());

@@ -496,3 +496,21 @@ body {
     .confirm-actions > * { flex: 1 1 120px; }
     .confirm-actions .btn { width: 100%; }
 }
+
+/* Task distribution */
+.todo-statistics { margin: 20px 0; }
+#statistics-status:empty { display: none; }
+.statistics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.statistics-card { min-width: 0; padding: 18px 14px; border: 1px solid #ddd; border-radius: 16px; background: #fff; container-type: inline-size; }
+.statistics-card h2 { margin: 0 0 10px; font-size: 1.1rem; text-align: center; }
+.statistics-canvas { position: relative; height: 240px; max-width: 240px; margin-inline: auto; }
+.statistics-badges, #category-summary, #priority-summary { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); justify-content: center; align-items: start; justify-items: start; gap: 8px 6px; padding: 0; margin: 16px 0 0; list-style: none; }
+.statistics-badge { display: inline-flex; align-items: center; gap: 5px; width: fit-content; max-width: 100%; padding: 6px 8px; border-radius: 12px; background: #f4f5f7; background: color-mix(in srgb, var(--badge-color) 16%, white); color: #17384a; font-size: 12px; line-height: 1.4; }
+.statistics-badge-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--badge-color); }
+.statistics-badge-label { min-width: 0; overflow-wrap: anywhere; }
+.statistics-badge-count { flex-shrink: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.statistics-card #priority-summary { display: grid; grid-template-columns: 190px; justify-content: center; gap: 7px; }
+#priority-summary .statistics-badge { display: grid; grid-template-columns: 8px 1fr auto; width: 190px; padding: 6px 12px; }
+#category-summary { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 6px; }
+#category-summary .statistics-badge { flex: 0 0 auto; }
+@media (max-width: 600px) { .statistics-grid { grid-template-columns: 1fr; } }
