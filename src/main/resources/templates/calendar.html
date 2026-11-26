@@ -15,8 +15,9 @@
                 <a class="link" th:href="@{/calendar(year=${previousMonth.year},month=${previousMonth.monthValue})}">前の月</a>
                 <a class="link" th:href="@{/calendar(year=${nextMonth.year},month=${nextMonth.monthValue})}">次の月</a>
             </div>
-            <div class="calendar-navigation-group">
-                <a class="link" href="/todos">表で見る</a>
+            <div class="calendar-navigation-group list-actions">
+                <a class="btn sub" th:href="@{/todos}">一覧で見る</a>
+                <a class="btn sub" th:href="@{/todos/kanban}">カンバンで見る</a>
                 <a class="btn" href="/todos/new">新規登録</a>
             </div>
         </nav>
