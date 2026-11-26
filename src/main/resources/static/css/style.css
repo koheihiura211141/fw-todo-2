@@ -4,8 +4,8 @@
 
 body {
     margin: 0;
-    color: #334155;
-    background: #ffffff;
+    color: #1c4658;
+    background: #e4d9d2;
     font-family: sans-serif;
     font-size: 16px;
     line-height: 1.6;
@@ -20,7 +20,7 @@ body {
 
 .page-title {
     margin: 0 0 24px;
-    color: #1e293b;
+    color: #1c4658;
     font-size: 28px;
 }
 
@@ -31,23 +31,24 @@ body {
 
 .todo-table th,
 .todo-table td {
-    border: 1px solid #94a3b8;
+    border: 1px solid #52717e;
     padding: 6px 10px;
     text-align: left;
     font-size: 14px;
 }
 
 .todo-table th {
-    background: #f1f5f9;
+    background: #1c4658;
+    color: #ffffff;
     font-weight: bold;
 }
 
 .flash {
     margin: 0 0 16px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #b8aaa0;
     border-radius: 8px;
     padding: 8px 12px;
-    background: #f1f5f9;
+    background: #f4ede7;
 }
 
 .search-bar {
@@ -69,11 +70,11 @@ body {
 
 .form-input {
     width: 100%;
-    border: 1px solid #94a3b8;
+    border: 1px solid #52717e;
     border-radius: 6px;
     padding: 7px 10px;
     background: #ffffff;
-    color: #334155;
+    color: #1c4658;
     font: inherit;
 }
 
@@ -98,10 +99,10 @@ body {
 
 .btn {
     display: inline-block;
-    border: 1px solid #334155;
+    border: 1px solid #1c4658;
     border-radius: 7px;
     padding: 7px 18px;
-    background: #334155;
+    background: #1c4658;
     color: #ffffff;
     font: inherit;
     text-decoration: none;
@@ -110,11 +111,11 @@ body {
 
 .btn.sub {
     background: #ffffff;
-    color: #334155;
+    color: #1c4658;
 }
 
 .link {
-    color: #334155;
+    color: #1c4658;
     text-decoration: underline;
 }
 
@@ -132,23 +133,23 @@ body {
 .page-link {
     display: inline-block;
     min-width: 38px;
-    border: 1px solid #94a3b8;
+    border: 1px solid #52717e;
     border-radius: 5px;
     padding: 4px 10px;
-    color: #334155;
+    color: #1c4658;
     text-align: center;
     text-decoration: none;
 }
 
 .page-link.active {
-    border-color: #334155;
-    background: #334155;
+    border-color: #1c4658;
+    background: #1c4658;
     color: #ffffff;
     font-weight: bold;
 }
 
 .page-link.disabled {
-    color: #94a3b8;
+    color: #52717e;
 }
 
 .calendar-navigation {
@@ -162,7 +163,7 @@ body {
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
-    border: 1px solid #94a3b8;
+    border: 1px solid #52717e;
     border-radius: 9px;
     overflow: hidden;
 }
@@ -170,8 +171,8 @@ body {
 .calendar-table th,
 .calendar-table td {
     border: 0;
-    border-right: 1px solid #cbd5e1;
-    border-bottom: 1px solid #cbd5e1;
+    border-right: 1px solid #b8aaa0;
+    border-bottom: 1px solid #b8aaa0;
     padding: 8px;
     text-align: left;
 }
@@ -185,7 +186,8 @@ body {
 }
 
 .calendar-table th {
-    background: #f1f5f9;
+    background: #1c4658;
+    color: #ffffff;
     height: 46px;
 }
 
@@ -195,7 +197,7 @@ body {
 }
 
 .calendar-table tbody tr:nth-child(even) {
-    background: #f8fafc;
+    background: #faf7f4;
 }
 
 .calendar-table td span {
@@ -211,4 +213,35 @@ body {
 .calendar-todo-link {
     display: block;
     color: inherit;
+}
+/* Keep existing layout and use the reference palette throughout. */
+.page-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.page-heading .page-title {
+    margin: 0;
+}
+.title-image {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+.todo-table td,
+.calendar-table td {
+    background-color: #ffffff;
+}
+.btn:hover {
+    background: #2e5c6f;
+}
+.btn.sub:hover {
+    background: #f4ede7;
+}
+:focus-visible {
+    outline: 3px solid #a76b32;
+    outline-offset: 3px;
 }

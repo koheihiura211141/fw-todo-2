@@ -2,12 +2,13 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ToDo登録</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-2" th:href="@{/css/style.css(v='20261126-2')}">
 </head>
 <body>
     <main class="container">
-        <h1 class="page-title">ToDo登録</h1>
+        <div class="page-heading"><h1 class="page-title">ToDo登録</h1><img class="title-image" src="/images/todo-person.png" alt="" width="44" height="44"></div>
         <form action="/todos/confirm" method="post" th:object="${todo}">
             <div class="form-row">
                 <label class="form-label" for="author">作成者</label>
