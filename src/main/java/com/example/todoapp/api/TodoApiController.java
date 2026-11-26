@@ -56,6 +56,18 @@ public class TodoApiController {
         return TodoDto.from(findTodoOrThrow(id));
     }
 
+    @PostMapping("/api/todo")
+    public ResponseEntity<TodoDto> quickCreate(@Valid @RequestBody QuickTodoRequest request) {
+        Todo todo = new Todo();
+        todo.setTitle(request.title().strip());
+        todo.setCategory("その他");
+        todo.setPriority(2);
+        todo.setCompleted(false);
+        todoService.create(todo);
+        return ResponseEntity.created(URI.create("/api/todos/" + todo.getId()))
+                .body(TodoDto.from(todoService.findById(todo.getId())));
+    }
+
     @PostMapping("/api/todos")
     public ResponseEntity<TodoDto> create(@Valid @RequestBody TodoRequest request) {
         Todo todo = request.toTodo();

@@ -360,3 +360,24 @@ body {
     font-size: 12px;
     font-weight: bold;
 }
+
+.quick-todo-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #e4d9d2;
+    padding: 12px 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #52717e;
+}
+.quick-todo-controls { display: flex; gap: 8px; }
+.quick-todo-controls input { flex: 1; min-width: 0; }
+.quick-todo-error { color: #a01818; margin: 6px 0 0; }
+.todo-slide-in { animation: todo-slide-in 250ms ease-out; }
+@keyframes todo-slide-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .todo-slide-in { animation: none; }
+}

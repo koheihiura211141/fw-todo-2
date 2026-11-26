@@ -2,6 +2,8 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
     <link rel="stylesheet" href="/css/style.css?v=20261126-8" th:href="@{/css/style.css(v='20261126-8')}">
@@ -15,6 +17,16 @@
                 <a class="btn" href="/todos/new">新規登録</a>
             </nav>
         </header>
+        <form id="quick-todo-form" class="quick-todo-bar" th:action="@{/api/todo}" method="post" novalidate>
+            <label for="quick-todo-title">タスクをクイック追加</label>
+            <div class="quick-todo-controls">
+                <input id="quick-todo-title" class="form-input" name="title" type="text"
+                       placeholder="タイトルを入力してEnter" aria-describedby="quick-todo-error" autocomplete="off">
+                <button class="btn" type="submit">追加</button>
+            </div>
+            <p id="quick-todo-error" class="quick-todo-error" role="alert" hidden></p>
+            <span id="quick-todo-status" role="status" aria-live="polite"></span>
+        </form>
         <p class="flash" th:if="${message}" th:text="${message}"></p>
         <form id="list-filters" class="list-filters" action="/todos" method="get" aria-label="やることの検索と並び替え">
             <div class="filter-field filter-keyword">
@@ -31,7 +43,7 @@
             <button class="btn filter-submit" type="submit">適用</button>
             <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or order == 'desc'}">条件をクリア</a>
         </form>
-        <p th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
+        <p id="todo-empty" th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
         <form id="bulk-delete-form" th:action="@{/todos/bulk-delete}" method="post">
             <div class="bulk-actions">
                 <button id="bulk-delete-button" class="btn" type="submit" disabled>選択した項目を削除</button>
@@ -72,7 +84,7 @@
                     <th class="todo-selection"><label class="select-all-label"><input id="select-all" type="checkbox" th:disabled="${#lists.isEmpty(todos)}"> 全選択</label></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="todo-list">
                 <tr th:each="todo : ${todos}"
                     th:with="overdue=${todo.deadline != null and todo.deadline.isBefore(today)}, upcoming=${todo.deadline != null and !todo.deadline.isBefore(today) and !todo.deadline.isAfter(warningDate)}"
                     th:classappend="${overdue ? 'deadline-overdue' : (upcoming ? 'deadline-upcoming' : '')}">
@@ -108,5 +120,6 @@
         </nav>
     </main>
     <script src="/js/todo-selection.js" th:src="@{/js/todo-selection.js}" defer></script>
+    <script src="/js/quick-todo.js" th:src="@{/js/quick-todo.js}" defer></script>
 </body>
 </html>

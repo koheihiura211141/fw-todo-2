@@ -9,7 +9,7 @@
 <body>
     <main class="container">
         <div class="page-heading"><h1 class="page-title">ToDo登録</h1><img class="title-image" src="/images/todo-create.png" alt="" width="88" height="72"></div>
-        <form action="/todos/confirm" method="post" th:object="${todo}">
+        <form action="/todos/confirm" th:action="@{/todos/confirm}" method="post" th:object="${todo}">
             <div class="form-row">
                 <label class="form-label" for="author">作成者</label>
                 <input class="form-input" id="author" type="text" th:field="*{author}">
