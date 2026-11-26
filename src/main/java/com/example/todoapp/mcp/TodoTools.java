@@ -23,7 +23,7 @@ public class TodoTools {
     private final TodoService todoService;
     private final HolidayClient holidayClient;
     private static final Set<String> CATEGORIES = Set.of(
-            "デザイン", "マーケティング", "プログラミング", "資格", "就職活動");
+            "デザイン", "マーケティング", "プログラミング", "資格", "就職活動", "その他");
 
     public TodoTools(TodoService todoService, HolidayClient holidayClient) {
         this.todoService = todoService;
@@ -64,7 +64,7 @@ public class TodoTools {
             throw new IllegalArgumentException("メモは255文字以内で入力してください");
         }
         if (category == null || !CATEGORIES.contains(category)) {
-            throw new IllegalArgumentException("ジャンルはデザイン・マーケティング・プログラミング・資格・就職活動から選んでください");
+            throw new IllegalArgumentException("ジャンルはデザイン・マーケティング・プログラミング・資格・就職活動・その他から選んでください");
         }
         if (priority == null) {
             throw new IllegalArgumentException("優先度を指定してください");
@@ -99,7 +99,7 @@ public class TodoTools {
             throw new IllegalArgumentException("メモは255文字以内で入力してください");
         }
         if (category != null && !CATEGORIES.contains(category)) {
-            throw new IllegalArgumentException("ジャンルはデザイン・マーケティング・プログラミング・資格・就職活動から選んでください");
+            throw new IllegalArgumentException("ジャンルはデザイン・マーケティング・プログラミング・資格・就職活動・その他から選んでください");
         }
         if (title != null) todo.setTitle(title);
         if (detail != null) todo.setDetail(detail);
