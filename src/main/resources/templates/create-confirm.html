@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ToDo登録の確認</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-2" th:href="@{/css/style.css(v='20261126-2')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-5" th:href="@{/css/style.css(v='20261126-5')}">
 </head>
 <body>
     <main class="container">
-        <div class="page-heading"><h1 class="page-title">ToDo登録の確認</h1><img class="title-image" src="/images/todo-person.png" alt="" width="44" height="44"></div>
+        <div class="page-heading"><h1 class="page-title">ToDo登録の確認</h1><img class="title-image" src="/images/todo-person.png" alt="" width="88" height="72"></div>
         <p class="confirm-value">やること：<span th:text="${#strings.isEmpty(todo.title) ? '（入力なし）' : todo.title}">やること</span></p>
         <p class="confirm-value">メモ：<span th:text="${#strings.isEmpty(todo.detail) ? '（入力なし）' : todo.detail}">メモ</span></p>
         <p class="confirm-value">ジャンル：<span th:text="${#strings.isEmpty(todo.category) ? '（入力なし）' : todo.category}">ジャンル</span></p>

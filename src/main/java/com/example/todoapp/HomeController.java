@@ -34,6 +34,8 @@ public class HomeController {
     public String todos(@RequestParam(defaultValue = "") String keyword,
                         @RequestParam(defaultValue = "") String category,
                         @RequestParam(defaultValue = "asc") String order,
+                        @RequestParam(required = false) Integer priority,
+                        @RequestParam(required = false) Boolean completed,
                         @PageableDefault(size = 10) Pageable pageable,
                         Model model) {
         if (!order.equals("desc")) {
@@ -41,11 +43,11 @@ public class HomeController {
         }
         int pageNumber = Math.max(0, pageable.getPageNumber());
         pageable = PageRequest.of(pageNumber, 10);
-        Page<Todo> todoPage = todoService.search(keyword, category, order, pageable);
+        Page<Todo> todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
         if (todoPage.getTotalPages() > 0 && pageNumber >= todoPage.getTotalPages()) {
             pageNumber = todoPage.getTotalPages() - 1;
             pageable = PageRequest.of(pageNumber, 10);
-            todoPage = todoService.search(keyword, category, order, pageable);
+            todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
         }
         model.addAttribute("todoPage", todoPage);
         model.addAttribute("todos", todoPage.getContent());
@@ -54,6 +56,8 @@ public class HomeController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("order", order);
+        model.addAttribute("priority", priority);
+        model.addAttribute("completed", completed);
         return "todos";
     }
 

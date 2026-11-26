@@ -4,39 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-2" th:href="@{/css/style.css(v='20261126-2')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-6" th:href="@{/css/style.css(v='20261126-6')}">
 </head>
 <body>
     <main class="container">
-        <div class="page-heading"><h1 class="page-title">やること一覧</h1><img class="title-image" src="/images/todo-person.png" alt="" width="44" height="44"></div>
+        <header class="list-header">
+            <div class="page-heading"><h1 class="page-title">やること一覧</h1><img class="title-image" src="/images/todo-person.png" alt="" width="88" height="72"></div>
+            <nav class="list-actions" aria-label="一覧の操作">
+                <a class="btn sub" href="/calendar">カレンダーで見る</a>
+                <a class="btn" href="/todos/new">新規登録</a>
+            </nav>
+        </header>
         <p class="flash" th:if="${message}" th:text="${message}"></p>
-        <p><a class="btn" href="/todos/new">新規登録</a> <a class="link" href="/calendar">カレンダーで見る</a></p>
-        <form class="search-bar" action="/todos" method="get">
-            <label for="keyword">やることの名前</label>
-            <input class="form-input" id="keyword" type="text" name="keyword" th:value="${keyword}">
-            <label for="category">ジャンル</label>
-            <select class="form-input" id="category" name="category">
-                <option value="" th:selected="${category == ''}">すべて</option>
+        <form id="list-filters" class="list-filters" action="/todos" method="get" aria-label="やることの検索と並び替え">
+            <div class="filter-field filter-keyword">
+                <label for="keyword">やることの名前</label>
+                <input class="form-input" id="keyword" type="search" name="keyword" placeholder="名前で検索" th:value="${keyword}">
+            </div>
+            <div class="filter-field">
+                <label for="order">並び順</label>
+                <select class="form-input" id="order" name="order">
+                    <option value="asc" th:selected="${order == 'asc'}">期限が近い順</option>
+                    <option value="desc" th:selected="${order == 'desc'}">期限が遠い順</option>
+                </select>
+            </div>
+            <button class="btn filter-submit" type="submit">適用</button>
+            <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or order == 'desc'}">条件をクリア</a>
+        </form>
+        <p th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
+        <table class="todo-table">
+            <thead>
+                <tr>
+                    <th>やること</th>
+                    <th><select class="column-filter" id="category" name="category" form="list-filters" aria-label="ジャンルで絞り込み" onchange="this.form.requestSubmit()">
+                <option value="" th:selected="${category == ''}">ジャンル：すべて</option>
                 <option value="デザイン" th:selected="${category == 'デザイン'}">デザイン</option>
                 <option value="マーケティング" th:selected="${category == 'マーケティング'}">マーケティング</option>
                 <option value="プログラミング" th:selected="${category == 'プログラミング'}">プログラミング</option>
                 <option value="資格" th:selected="${category == '資格'}">資格</option>
                 <option value="就職活動" th:selected="${category == '就職活動'}">就職活動</option>
-            </select>
-            <input type="hidden" name="order" th:value="${order}">
-            <button class="btn" type="submit">絞り込む</button>
-            <a class="link" th:href="@{/todos(keyword=${keyword},category=${category},order='asc')}">期限が近い順</a>
-            <a class="link" th:href="@{/todos(keyword=${keyword},category=${category},order='desc')}">期限が遠い順</a>
-        </form>
-        <p th:if="${#lists.isEmpty(todos)}">まだ1件も登録されていません</p>
-        <table class="todo-table" th:unless="${#lists.isEmpty(todos)}">
-            <thead>
-                <tr>
-                    <th>やること</th>
-                    <th>ジャンル</th>
-                    <th>優先度</th>
+            </select></th>
+                    <th>
+                        <select class="column-filter" name="priority" form="list-filters" aria-label="優先度で絞り込み" onchange="this.form.requestSubmit()">
+                            <option value="" th:selected="${priority == null}">優先度：すべて</option>
+                            <option value="1" th:selected="${priority == 1}">高</option>
+                            <option value="2" th:selected="${priority == 2}">中</option>
+                            <option value="3" th:selected="${priority == 3}">低</option>
+                        </select>
+                    </th>
                     <th>期限</th>
-                    <th>状態</th>
+                    <th>
+                        <select class="column-filter" name="completed" form="list-filters" aria-label="状態で絞り込み" onchange="this.form.requestSubmit()">
+                            <option value="" th:selected="${completed == null}">状態：すべて</option>
+                            <option value="false" th:selected="${completed == false}">未完了</option>
+                            <option value="true" th:selected="${completed == true}">完了</option>
+                        </select>
+                    </th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -55,15 +78,15 @@
            th:text="|全${todoPage.totalElements}件中 ${startItem}-${endItem}件|">全50件中 1-10件</p>
         <nav class="pagination" aria-label="ページネーション" th:if="${todoPage.totalPages > 1}">
             <a class="page-link" th:if="${todoPage.hasPrevious()}"
-               th:href="@{/todos(page=${todoPage.number - 1},keyword=${keyword},category=${category},order=${order})}">前へ</a>
+               th:href="@{/todos(page=${todoPage.number - 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}">前へ</a>
             <span class="page-link disabled" th:unless="${todoPage.hasPrevious()}">前へ</span>
             <a class="page-link" th:each="pageNumber : ${#numbers.sequence(0, todoPage.totalPages - 1)}"
-               th:href="@{/todos(page=${pageNumber},keyword=${keyword},category=${category},order=${order})}"
+               th:href="@{/todos(page=${pageNumber},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}"
                th:text="${pageNumber + 1}"
                th:classappend="${pageNumber == todoPage.number} ? ' active' : ''"
                th:attr="aria-current=${pageNumber == todoPage.number ? 'page' : null}">1</a>
             <a class="page-link" th:if="${todoPage.hasNext()}"
-               th:href="@{/todos(page=${todoPage.number + 1},keyword=${keyword},category=${category},order=${order})}">次へ</a>
+               th:href="@{/todos(page=${todoPage.number + 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}">次へ</a>
             <span class="page-link disabled" th:unless="${todoPage.hasNext()}">次へ</span>
         </nav>
     </main>

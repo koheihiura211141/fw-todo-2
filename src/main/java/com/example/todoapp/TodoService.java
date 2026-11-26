@@ -25,9 +25,15 @@ public class TodoService {
 
     public Page<Todo> search(String keyword, String category, String order,
                              LocalDate from, LocalDate to, Pageable pageable) {
+        return search(keyword, category, order, null, null, from, to, pageable);
+    }
+
+    public Page<Todo> search(String keyword, String category, String order,
+                             Integer priority, Boolean completed,
+                             LocalDate from, LocalDate to, Pageable pageable) {
         List<Todo> todos = todoMapper.searchPage(
-                keyword, category, order, from, to, pageable.getPageSize(), pageable.getOffset());
-        long total = todoMapper.countSearch(keyword, category, from, to);
+                keyword, category, order, priority, completed, from, to, pageable.getPageSize(), pageable.getOffset());
+        long total = todoMapper.countSearch(keyword, category, priority, completed, from, to);
         return new PageImpl<>(todos, pageable, total);
     }
 

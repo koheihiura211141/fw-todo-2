@@ -11,6 +11,12 @@
             <if test="category != null and category != ''">
                 AND category = #{category}
             </if>
+            <if test="priority != null">
+                AND priority = #{priority}
+            </if>
+            <if test="completed != null">
+                AND completed = #{completed}
+            </if>
             <if test="from != null">
                 AND due_date &gt;= #{from}
             </if>
