@@ -6,11 +6,11 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-21" th:href="@{/css/style.css(v='20261126-21')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-22" th:href="@{/css/style.css(v='20261126-22')}">
 </head>
 <body>
     <div th:replace="~{fragments/account :: account}"></div>
-    <main class="container">
+    <main class="container todo-list-container">
         <header class="list-header">
             <div class="page-heading"><h1 class="page-title">やること一覧</h1><img class="title-image" src="/images/todo-person.png" alt="" width="88" height="72"></div>
             <nav class="list-actions" aria-label="一覧の操作">
@@ -112,6 +112,7 @@
                         <a class="column-sort" th:classappend="${sortBy == 'deadline' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},category=${category},priority=${priority},completed=${completed},from=${from},to=${to},sortBy='deadline',order=${sortBy == 'deadline' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|期限を${sortBy == 'deadline' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
                     <th th:attr="aria-sort=${sortBy == 'completed' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">状態
                         <a class="column-sort" th:classappend="${sortBy == 'completed' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},category=${category},priority=${priority},completed=${completed},from=${from},to=${to},sortBy='completed',order=${sortBy == 'completed' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|状態を${sortBy == 'completed' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
+                    <th class="todo-memo-cell">メモ</th>
                     <th class="todo-operations">操作</th>
                     <th class="todo-selection"><label class="select-all-label"><input id="select-all" type="checkbox" th:disabled="${#lists.isEmpty(todos)}"> 全選択</label></th>
                 </tr>
@@ -129,6 +130,13 @@
                         <span class="deadline-warning" th:if="${upcoming}">3日以内</span>
                     </td>
                     <td><button type="button" class="todo-status" th:attr="data-id=${todo.id},data-completed=${todo.completed == true},aria-pressed=${todo.completed == true}"><svg class="completion-mark" viewBox="0 0 32 32" aria-hidden="true"><path pathLength="1" d="M6 17 L13 25 L27 7"/></svg><span class="completion-label" th:text="${todo.completed ? '完了' : '未完了'}">未完了</span></button></td>
+                    <td class="todo-memo-cell">
+                        <details class="todo-memo" th:if="${!#strings.isEmpty(todo.detail)}">
+                            <summary><span class="todo-memo-preview" th:text="${todo.detailPreview}"></span><span class="todo-memo-action">確認する</span></summary>
+                            <p th:text="${todo.detail}"></p>
+                        </details>
+                        <span th:if="${#strings.isEmpty(todo.detail)}">（入力なし）</span>
+                    </td>
                     <td class="todo-operations"><a class="link" th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a> <a class="link" th:href="@{/todos/{id}/delete(id=${todo.id})}">削除</a></td>
                     <td class="todo-selection"><input class="todo-select" type="checkbox" name="ids" th:value="${todo.id}"
                                form="bulk-delete-form" th:attr="aria-label=|${todo.title}を選択|"></td>

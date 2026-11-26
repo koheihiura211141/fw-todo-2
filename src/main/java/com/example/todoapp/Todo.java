@@ -20,6 +20,10 @@ public class Todo {
     private String title;
     @Size(max = 255, message = "メモは255文字以内で入力してください")
     private String detail;
+
+    public String getDetailPreview() {
+        return detail == null ? "" : detail.strip().replaceFirst("(?s)^([^。！？!?\\r\\n]*[。！？!?]?).*$", "$1");
+    }
     @NotBlank(message = "ジャンルを選んでください")
     private String category;
     @NotNull(message = "優先度を選んでください")

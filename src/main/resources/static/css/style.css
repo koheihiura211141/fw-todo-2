@@ -36,6 +36,74 @@ body {
     font-size: 28px;
 }
 
+.todo-list-container {
+    max-width: 1600px;
+    padding-inline: 32px;
+}
+
+.todo-list-container .page-title {
+    white-space: nowrap;
+}
+
+.todo-list-container .todo-table {
+    min-width: 1160px;
+}
+
+.todo-list-container .todo-table th,
+.todo-list-container .todo-table td {
+    padding: 12px 16px;
+}
+
+.todo-list-container .todo-table th,
+.todo-list-container .todo-table td:nth-child(2),
+.todo-list-container .todo-table td:nth-child(3),
+.todo-list-container .todo-table td:nth-child(4) {
+    white-space: nowrap;
+}
+
+.todo-list-container .todo-table td:first-child {
+    min-width: 240px;
+    overflow-wrap: anywhere;
+}
+
+.todo-list-container .todo-table .todo-memo-cell {
+    width: 220px;
+    min-width: 180px;
+    max-width: 240px;
+}
+
+.todo-memo {
+    font-size: 0.9rem;
+}
+
+.todo-table .todo-memo-cell {
+    width: 160px;
+    min-width: 120px;
+    max-width: 160px;
+}
+
+.todo-memo summary {
+    cursor: pointer;
+}
+
+.todo-memo-preview {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.todo-memo-action {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.todo-memo p {
+    margin: 8px 0 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 .todo-table {
     width: 100%;
     border-collapse: collapse;

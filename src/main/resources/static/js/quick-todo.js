@@ -30,6 +30,10 @@
         const statusCell = document.createElement('td');
         statusCell.append(window.createTodoStatusButton(todo));
         row.append(statusCell);
+        const memoCell = document.createElement('td');
+        memoCell.className = 'todo-memo-cell';
+        memoCell.textContent = '（入力なし）';
+        row.append(memoCell);
         const operations = document.createElement('td');
         operations.className = 'todo-operations';
         const base = new URL(form.action);
