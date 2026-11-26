@@ -6,7 +6,7 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-15" th:href="@{/css/style.css(v='20261126-15')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-17" th:href="@{/css/style.css(v='20261126-17')}">
 </head>
 <body>
     <div th:replace="~{fragments/account :: account}"></div>
@@ -80,6 +80,8 @@
             </div>
         </form>
         <p id="todo-sort-error" class="quick-todo-error" role="alert" hidden></p>
+        <p class="table-scroll-hint">左右にスクロールして確認できます</p>
+        <div class="table-scroll" role="region" aria-label="やること一覧（横スクロール）" tabindex="0">
         <table class="todo-table">
             <thead>
                 <tr>
@@ -116,6 +118,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
         <p class="page-summary" th:if="${todoPage.totalElements > 0}"
            th:text="|全${todoPage.totalElements}件中 ${startItem}-${endItem}件|">全50件中 1-10件</p>
         <nav class="pagination" aria-label="ページネーション" th:if="${todoPage.totalPages > 1}">

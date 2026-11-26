@@ -10,5 +10,9 @@
 .kanban-card.dragging, .kanban-card[aria-busy="true"] { opacity: .55; }
 .kanban-column.drag-over { border-color: #2563eb; background: #dbeafe; }
 @media (max-width: 700px) {
-    .kanban-board { grid-template-columns: repeat(3, minmax(240px, 1fr)); overflow-x: auto; padding-bottom: 12px; }
+    .kanban-board { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .kanban-column { padding: 12px; }
+    .kanban-cards { min-height: 60px; }
+    .kanban-card select { display: block; width: 100%; min-height: 44px; margin-top: 6px; font: inherit; }
+    .kanban-card h3 a { display: block; padding-block: 6px; }
 }

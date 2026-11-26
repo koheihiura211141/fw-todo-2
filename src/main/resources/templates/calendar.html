@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>カレンダー</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-5" th:href="@{/css/style.css(v='20261126-5')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-16" th:href="@{/css/style.css(v='20261126-16')}">
 </head>
 <body>
     <div th:replace="~{fragments/account :: account}"></div>
@@ -20,6 +20,8 @@
                 <a class="btn" href="/todos/new">新規登録</a>
             </div>
         </nav>
+        <p class="table-scroll-hint">左右にスクロールして確認できます</p>
+        <div class="table-scroll" role="region" aria-label="カレンダー（横スクロール）" tabindex="0">
         <table class="calendar-table" aria-labelledby="calendar-title" th:attr="data-from=${firstDay},data-to=${lastDay}">
             <thead>
                 <tr>
@@ -34,6 +36,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </main>
     <script>
         async function loadTodos() {
