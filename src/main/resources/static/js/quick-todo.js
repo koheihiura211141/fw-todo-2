@@ -22,11 +22,14 @@
     function prependTodo(todo) {
         const row = document.createElement('tr');
         row.className = 'todo-slide-in';
-        for (const value of [todo.title, todo.category, '中', '（入力なし）', '未完了']) {
+        for (const value of [todo.title, todo.category, '中', '（入力なし）']) {
             const cell = document.createElement('td');
             cell.textContent = value;
             row.append(cell);
         }
+        const statusCell = document.createElement('td');
+        statusCell.append(window.createTodoStatusButton(todo));
+        row.append(statusCell);
         const operations = document.createElement('td');
         operations.className = 'todo-operations';
         const base = new URL(form.action);

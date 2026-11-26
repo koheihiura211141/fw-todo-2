@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,7 @@ public class HomeController {
     public String todos(@RequestParam(defaultValue = "") String keyword,
                         @RequestParam(defaultValue = "") String category,
                         @RequestParam(defaultValue = "asc") String order,
+                        @RequestParam(defaultValue = "deadline") String sortBy,
                         @RequestParam(required = false) Integer priority,
                         @RequestParam(required = false) Boolean completed,
                         @PageableDefault(size = 10) Pageable pageable,
@@ -44,12 +46,16 @@ public class HomeController {
         if (!order.equals("desc")) {
             order = "asc";
         }
+        if (!List.of("title", "category", "priority", "deadline", "completed").contains(sortBy)) {
+            sortBy = "deadline";
+        }
+        Sort sort = Sort.by(sortBy);
         int pageNumber = Math.max(0, pageable.getPageNumber());
-        pageable = PageRequest.of(pageNumber, 10);
+        pageable = PageRequest.of(pageNumber, 10, sort);
         Page<Todo> todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
         if (todoPage.getTotalPages() > 0 && pageNumber >= todoPage.getTotalPages()) {
             pageNumber = todoPage.getTotalPages() - 1;
-            pageable = PageRequest.of(pageNumber, 10);
+            pageable = PageRequest.of(pageNumber, 10, sort);
             todoPage = todoService.search(keyword, category, order, priority, completed, null, null, pageable);
         }
         model.addAttribute("todoPage", todoPage);
@@ -62,6 +68,7 @@ public class HomeController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("order", order);
+        model.addAttribute("sortBy", sortBy);
         model.addAttribute("priority", priority);
         model.addAttribute("completed", completed);
         return "todos";

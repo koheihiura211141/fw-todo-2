@@ -62,6 +62,15 @@ class TodoDeadlineTests {
         assertEquals(5, html.split("class=\"todo-select\"", -1).length - 1);
         assertTrue(html.contains("form=\"bulk-delete-form\""));
         assertTrue(html.contains("/js/todo-selection.js"));
+        assertFalse(html.contains("<select"));
+        assertTrue(html.contains("aria-sort=\"ascending\""));
+        assertTrue(html.contains("sortBy=deadline&amp;order=desc"));
+        String sorted = mvc.perform(get("/todos").param("sortBy", "title").param("order", "desc"))
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(sorted.contains("aria-sort=\"descending\""));
+        assertTrue(sorted.contains("sortBy=title&amp;order=asc"));
+        verify(service).search(eq(""), eq(""), eq("desc"), isNull(), isNull(), isNull(), isNull(),
+                argThat(page -> page.getSort().getOrderFor("title") != null));
     }
 
     @Test

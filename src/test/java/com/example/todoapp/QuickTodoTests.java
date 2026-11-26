@@ -44,6 +44,47 @@ class QuickTodoTests {
     }
 
     @Test
+    void updatesOnlyCompletionInBothDirections() throws Exception {
+        Todo saved = new Todo();
+        saved.setId(7L);
+        saved.setTitle("買い物");
+        when(service.findById(7L)).thenReturn(saved);
+        when(service.updateCompleted(org.mockito.ArgumentMatchers.eq(7L), anyBoolean()))
+                .thenAnswer(invocation -> {
+                    saved.setCompleted(invocation.getArgument(1));
+                    return 1;
+                });
+        for (boolean completed : new boolean[]{true, false}) {
+            mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                    .patch("/api/todos/7/completed").with(csrf().asHeader())
+                    .contentType("application/json").content("{\"completed\":" + completed + "}"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.completed").value(completed))
+                    .andExpect(jsonPath("$.title").value("買い物"));
+            verify(service).updateCompleted(7L, completed);
+        }
+        verify(service, never()).update(any());
+    }
+
+    @Test
+    void completionRejectsInvalidRequests() throws Exception {
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .patch("/api/todos/7/completed").with(csrf().asHeader())
+                .contentType("application/json").content("{}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .patch("/api/todos/7/completed")
+                .contentType("application/json").content("{\"completed\":true}"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(service);
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .patch("/api/todos/999/completed").with(csrf().asHeader())
+                .contentType("application/json").content("{\"completed\":true}"))
+                .andExpect(status().isNotFound());
+        verify(service, never()).updateCompleted(any(), anyBoolean());
+    }
+
+    @Test
     void createsTitleOnlyTaskWithDefaults() throws Exception {
         Todo saved = new Todo();
         saved.setId(7L);

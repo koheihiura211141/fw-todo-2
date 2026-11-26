@@ -6,7 +6,7 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-8" th:href="@{/css/style.css(v='20261126-8')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-10" th:href="@{/css/style.css(v='20261126-10')}">
 </head>
 <body>
     <main class="container">
@@ -33,15 +33,9 @@
                 <label for="keyword">やることの名前</label>
                 <input class="form-input" id="keyword" type="search" name="keyword" placeholder="名前で検索" th:value="${keyword}">
             </div>
-            <div class="filter-field">
-                <label for="order">並び順</label>
-                <select class="form-input" id="order" name="order">
-                    <option value="asc" th:selected="${order == 'asc'}">期限が近い順</option>
-                    <option value="desc" th:selected="${order == 'desc'}">期限が遠い順</option>
-                </select>
-            </div>
+            <input type="hidden" name="sortBy" th:value="${sortBy}"><input type="hidden" name="order" th:value="${order}">
             <button class="btn filter-submit" type="submit">適用</button>
-            <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or order == 'desc'}">条件をクリア</a>
+            <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or order == 'desc' or sortBy != 'deadline'}">条件をクリア</a>
         </form>
         <p id="todo-empty" th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
         <form id="bulk-delete-form" th:action="@{/todos/bulk-delete}" method="post">
@@ -51,35 +45,20 @@
                 <span>全選択はこのページの項目が対象です</span>
             </div>
         </form>
+        <p id="todo-sort-error" class="quick-todo-error" role="alert" hidden></p>
         <table class="todo-table">
             <thead>
                 <tr>
-                    <th>やること</th>
-                    <th><select class="column-filter" id="category" name="category" form="list-filters" aria-label="ジャンルで絞り込み" onchange="this.form.requestSubmit()">
-                <option value="" th:selected="${category == ''}">ジャンル：すべて</option>
-                <option value="デザイン" th:selected="${category == 'デザイン'}">デザイン</option>
-                <option value="マーケティング" th:selected="${category == 'マーケティング'}">マーケティング</option>
-                <option value="プログラミング" th:selected="${category == 'プログラミング'}">プログラミング</option>
-                <option value="資格" th:selected="${category == '資格'}">資格</option>
-                <option value="就職活動" th:selected="${category == '就職活動'}">就職活動</option>
-                <option value="その他" th:selected="${category == 'その他'}">その他</option>
-            </select></th>
-                    <th>
-                        <select class="column-filter" name="priority" form="list-filters" aria-label="優先度で絞り込み" onchange="this.form.requestSubmit()">
-                            <option value="" th:selected="${priority == null}">優先度：すべて</option>
-                            <option value="1" th:selected="${priority == 1}">高</option>
-                            <option value="2" th:selected="${priority == 2}">中</option>
-                            <option value="3" th:selected="${priority == 3}">低</option>
-                        </select>
-                    </th>
-                    <th>期限</th>
-                    <th>
-                        <select class="column-filter" name="completed" form="list-filters" aria-label="状態で絞り込み" onchange="this.form.requestSubmit()">
-                            <option value="" th:selected="${completed == null}">状態：すべて</option>
-                            <option value="false" th:selected="${completed == false}">未完了</option>
-                            <option value="true" th:selected="${completed == true}">完了</option>
-                        </select>
-                    </th>
+                    <th th:attr="aria-sort=${sortBy == 'title' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">やること
+                        <a class="column-sort" th:classappend="${sortBy == 'title' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},sortBy='title',order=${sortBy == 'title' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|やることを${sortBy == 'title' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
+                    <th th:attr="aria-sort=${sortBy == 'category' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">ジャンル
+                        <a class="column-sort" th:classappend="${sortBy == 'category' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},sortBy='category',order=${sortBy == 'category' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|ジャンルを${sortBy == 'category' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
+                    <th th:attr="aria-sort=${sortBy == 'priority' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">優先度
+                        <a class="column-sort" th:classappend="${sortBy == 'priority' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},sortBy='priority',order=${sortBy == 'priority' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|優先度を${sortBy == 'priority' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
+                    <th th:attr="aria-sort=${sortBy == 'deadline' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">期限
+                        <a class="column-sort" th:classappend="${sortBy == 'deadline' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},sortBy='deadline',order=${sortBy == 'deadline' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|期限を${sortBy == 'deadline' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
+                    <th th:attr="aria-sort=${sortBy == 'completed' ? (order == 'asc' ? 'ascending' : 'descending') : 'none'}"><span class="column-heading">状態
+                        <a class="column-sort" th:classappend="${sortBy == 'completed' ? 'sort-' + order : ''}" th:href="@{/todos(keyword=${keyword},sortBy='completed',order=${sortBy == 'completed' and order == 'asc' ? 'desc' : 'asc'})}" th:attr="aria-label=|状態を${sortBy == 'completed' and order == 'asc' ? '降順' : '昇順'}に並び替え|"><span class="sort-up" aria-hidden="true">▲</span><span class="sort-down" aria-hidden="true">▼</span></a></span></th>
                     <th class="todo-operations">操作</th>
                     <th class="todo-selection"><label class="select-all-label"><input id="select-all" type="checkbox" th:disabled="${#lists.isEmpty(todos)}"> 全選択</label></th>
                 </tr>
@@ -96,7 +75,7 @@
                         <span class="deadline-warning" th:if="${overdue}">期限切れ</span>
                         <span class="deadline-warning" th:if="${upcoming}">3日以内</span>
                     </td>
-                    <td th:text="${todo.completed ? '完了' : '未完了'}">状態</td>
+                    <td><button type="button" class="todo-status" th:attr="data-id=${todo.id},data-completed=${todo.completed == true},aria-pressed=${todo.completed == true}"><svg class="completion-mark" viewBox="0 0 32 32" aria-hidden="true"><path pathLength="1" d="M6 17 L13 25 L27 7"/></svg><span class="completion-label" th:text="${todo.completed ? '完了' : '未完了'}">未完了</span></button></td>
                     <td class="todo-operations"><a class="link" th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a> <a class="link" th:href="@{/todos/{id}/delete(id=${todo.id})}">削除</a></td>
                     <td class="todo-selection"><input class="todo-select" type="checkbox" name="ids" th:value="${todo.id}"
                                form="bulk-delete-form" th:attr="aria-label=|${todo.title}を選択|"></td>
@@ -107,18 +86,21 @@
            th:text="|全${todoPage.totalElements}件中 ${startItem}-${endItem}件|">全50件中 1-10件</p>
         <nav class="pagination" aria-label="ページネーション" th:if="${todoPage.totalPages > 1}">
             <a class="page-link" th:if="${todoPage.hasPrevious()}"
-               th:href="@{/todos(page=${todoPage.number - 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}">前へ</a>
+               th:href="@{/todos(page=${todoPage.number - 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order},sortBy=${sortBy})}">前へ</a>
             <span class="page-link disabled" th:unless="${todoPage.hasPrevious()}">前へ</span>
             <a class="page-link" th:each="pageNumber : ${#numbers.sequence(0, todoPage.totalPages - 1)}"
-               th:href="@{/todos(page=${pageNumber},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}"
+               th:href="@{/todos(page=${pageNumber},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order},sortBy=${sortBy})}"
                th:text="${pageNumber + 1}"
                th:classappend="${pageNumber == todoPage.number} ? ' active' : ''"
                th:attr="aria-current=${pageNumber == todoPage.number ? 'page' : null}">1</a>
             <a class="page-link" th:if="${todoPage.hasNext()}"
-               th:href="@{/todos(page=${todoPage.number + 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order})}">次へ</a>
+               th:href="@{/todos(page=${todoPage.number + 1},keyword=${keyword},category=${category},priority=${priority},completed=${completed},order=${order},sortBy=${sortBy})}">次へ</a>
             <span class="page-link disabled" th:unless="${todoPage.hasNext()}">次へ</span>
         </nav>
     </main>
+    <p id="todo-status-error" class="quick-todo-error" role="alert" hidden></p>
+    <script src="/js/todo-sort.js" th:src="@{/js/todo-sort.js}" defer></script>
+    <script src="/js/todo-status.js" th:src="@{/js/todo-status.js}" defer></script>
     <script src="/js/todo-selection.js" th:src="@{/js/todo-selection.js}" defer></script>
     <script src="/js/quick-todo.js" th:src="@{/js/quick-todo.js}" defer></script>
 </body>

@@ -12,6 +12,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TodoFilterTests {
     @Test
+    void sortingUsesAllowedColumnsAndStableTieBreaker() throws Exception {
+        Configuration configuration = new Configuration();
+        try (var stream = Resources.getResourceAsStream("mapper/TodoMapper.xml")) {
+            new XMLMapperBuilder(stream, configuration, "mapper/TodoMapper.xml",
+                    configuration.getSqlFragments()).parse();
+        }
+        var statement = configuration.getMappedStatement("com.example.todoapp.TodoMapper.searchPage");
+        for (String field : new String[] {"title", "category", "priority", "completed", "deadline", "invalid"}) {
+            for (String direction : new String[] {"asc", "desc"}) {
+                String column = field.equals("deadline") || field.equals("invalid")
+                        ? "(due_date IS NULL) ASC, due_date" : field;
+                String sql = statement.getBoundSql(Map.of("sortBy", field, "order", direction))
+                        .getSql().replaceAll("\\s+", " ");
+                assertTrue(sql.contains("ORDER BY " + column + " " + direction.toUpperCase() + " , id ASC"), sql);
+                assertTrue(sql.contains("LIMIT ? OFFSET ?"));
+            }
+        }
+    }
+    @Test
     void filtersApplyToBothRowsAndCountIncludingIncompleteStatus() throws Exception {
         Configuration configuration = new Configuration();
         try (var stream = Resources.getResourceAsStream("mapper/TodoMapper.xml")) {

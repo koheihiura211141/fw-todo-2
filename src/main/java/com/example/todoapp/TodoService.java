@@ -32,7 +32,7 @@ public class TodoService {
                              Integer priority, Boolean completed,
                              LocalDate from, LocalDate to, Pageable pageable) {
         List<Todo> todos = todoMapper.searchPage(
-                keyword, category, order, priority, completed, from, to, pageable.getPageSize(), pageable.getOffset());
+                keyword, category, order, pageable.getSort().stream().findFirst().map(org.springframework.data.domain.Sort.Order::getProperty).orElse("deadline"), priority, completed, from, to, pageable.getPageSize(), pageable.getOffset());
         long total = todoMapper.countSearch(keyword, category, priority, completed, from, to);
         return new PageImpl<>(todos, pageable, total);
     }
@@ -51,6 +51,10 @@ public class TodoService {
         int result = todoMapper.update(todo);
         log.info("編集: id={}", todo.getId());
         return result;
+    }
+
+    public int updateCompleted(Long id, boolean completed) {
+        return todoMapper.updateCompleted(id, completed);
     }
 
     public int deleteAll(List<Long> ids) {

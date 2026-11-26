@@ -86,6 +86,16 @@ public class TodoApiController {
         return TodoDto.from(todoService.findById(id));
     }
 
+    public record CompletionRequest(@jakarta.validation.constraints.NotNull Boolean completed) {}
+
+    @org.springframework.web.bind.annotation.PatchMapping("/api/todos/{id}/completed")
+    public TodoDto updateCompleted(@PathVariable("id") Long id,
+                                   @Valid @RequestBody CompletionRequest request) {
+        findTodoOrThrow(id);
+        todoService.updateCompleted(id, request.completed());
+        return TodoDto.from(findTodoOrThrow(id));
+    }
+
     @DeleteMapping("/api/todos/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         findTodoOrThrow(id);

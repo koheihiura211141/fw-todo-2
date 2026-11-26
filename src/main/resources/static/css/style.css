@@ -333,19 +333,7 @@ body {
     .list-actions .btn { flex: 1; padding-inline: 12px; text-align: center; }
 }
 
-/* 一覧の列見出しから絞り込む */
-.column-filter {
-    font: inherit;
-    font-weight: inherit;
-    color: inherit;
-    background-color: transparent;
-    border: 1px solid currentColor;
-    border-radius: 4px;
-    padding: 6px 8px;
-    max-width: 100%;
-    cursor: pointer;
-}
-.column-filter option { color: #222; background: #fff; }
+
 
 .todo-table .deadline-overdue td {
     background-color: #fee2e2;
@@ -381,3 +369,30 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .todo-slide-in { animation: none; }
 }
+.todo-status { display: inline-flex; align-items: center; background: transparent; border: 0; padding: 6px 2px; font: inherit; color: inherit; white-space: nowrap; cursor: pointer; }
+.todo-status:disabled { cursor: wait; }
+.todo-status:focus-visible { outline: 2px solid #15803d; outline-offset: 3px; }
+.completion-mark { width: 1.4em; height: 1.4em; color: #15803d; fill: none; stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.completion-mark path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.todo-status[data-completed="false"] .completion-mark { display: none; }
+
+.column-heading { display: flex; align-items: center; gap: 6px; }
+.column-sort {
+    display: inline-flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    min-width: 24px;
+    min-height: 32px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 9px;
+    line-height: 1.2;
+    border-radius: 4px;
+}
+.column-sort span { opacity: .4; }
+.column-sort.sort-asc .sort-up, .column-sort.sort-desc .sort-down { opacity: 1; }
+.column-sort:hover { background: #ffffff26; }
+.list-filters { grid-template-columns: minmax(180px, 1fr) auto; }
+@media (max-width: 420px) { .list-filters { grid-template-columns: minmax(0, 1fr); } }

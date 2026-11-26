@@ -29,7 +29,14 @@
         SELECT id, title, detail, category, priority, due_date AS deadline, completed, created_at, updated_at
         FROM todos
         <include refid="searchConditions"/>
-        ORDER BY (due_date IS NULL) ASC, due_date
+        ORDER BY
+        <choose>
+            <when test="sortBy == 'title'">title</when>
+            <when test="sortBy == 'category'">category</when>
+            <when test="sortBy == 'priority'">priority</when>
+            <when test="sortBy == 'completed'">completed</when>
+            <otherwise>(due_date IS NULL) ASC, due_date</otherwise>
+        </choose>
         <choose>
             <when test="order == 'desc'">DESC</when>
             <otherwise>ASC</otherwise>
@@ -59,6 +66,9 @@
             due_date = #{deadline},
             completed = #{completed}
         WHERE id = #{id}
+    </update>
+    <update id="updateCompleted">
+        UPDATE todos SET completed = #{completed} WHERE id = #{id}
     </update>
     <delete id="deleteById">
         DELETE FROM todos
