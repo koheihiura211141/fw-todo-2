@@ -6,7 +6,7 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>やること一覧</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261126-22" th:href="@{/css/style.css(v='20261126-22')}">
+    <link rel="stylesheet" href="/css/style.css?v=20261126-26" th:href="@{/css/style.css(v='20261126-26')}">
 </head>
 <body>
     <div th:replace="~{fragments/account :: account}"></div>
@@ -19,6 +19,8 @@
                 <a class="btn" href="/todos/new">新規登録</a>
             </nav>
         </header>
+        <details class="list-panel" open>
+            <summary>集計を見る</summary>
         <section id="todo-statistics" class="todo-statistics" aria-label="タスクの分布"
                  th:attr="data-category-url=@{/api/todos/stats/categories},data-priority-url=@{/api/todos/stats/priorities}">
             <p>全タスクの分布（検索条件に関係なく集計）</p>
@@ -36,6 +38,7 @@
                 </article>
             </div>
         </section>
+        </details>
         <form id="quick-todo-form" class="quick-todo-bar" th:action="@{/api/todo}" method="post" novalidate>
             <label for="quick-todo-title">タスクをクイック追加</label>
             <div class="quick-todo-controls">
@@ -47,6 +50,8 @@
             <span id="quick-todo-status" role="status" aria-live="polite"></span>
         </form>
         <p class="flash" th:if="${message}" th:text="${message}"></p>
+        <details class="list-panel filter-panel" open>
+            <summary>絞り込み・検索</summary>
         <form id="list-filters" class="list-filters" action="/todos" method="get" aria-label="やることの検索と並び替え">
             <div class="filter-field filter-keyword">
                 <label for="keyword">名前</label>
@@ -88,6 +93,7 @@
             <button class="btn filter-submit" type="submit">絞り込み</button>
             <a class="link filter-reset" href="/todos" th:if="${keyword != '' or category != '' or priority != null or completed != null or from != null or to != null or order == 'desc' or sortBy != 'deadline'}">条件をクリア</a>
         </form>
+        </details>
         <p id="todo-empty" th:if="${#lists.isEmpty(todos)}">条件に一致するやることがありません。</p>
         <form id="bulk-delete-form" th:action="@{/todos/bulk-delete}" method="post">
             <div class="bulk-actions">
@@ -97,8 +103,7 @@
             </div>
         </form>
         <p id="todo-sort-error" class="quick-todo-error" role="alert" hidden></p>
-        <p class="table-scroll-hint">左右にスクロールして確認できます</p>
-        <div class="table-scroll" role="region" aria-label="やること一覧（横スクロール）" tabindex="0">
+        <div class="table-scroll" role="region" aria-label="やること一覧" tabindex="0">
         <table class="todo-table">
             <thead>
                 <tr>
@@ -132,7 +137,7 @@
                     <td><button type="button" class="todo-status" th:attr="data-id=${todo.id},data-completed=${todo.completed == true},aria-pressed=${todo.completed == true}"><svg class="completion-mark" viewBox="0 0 32 32" aria-hidden="true"><path pathLength="1" d="M6 17 L13 25 L27 7"/></svg><span class="completion-label" th:text="${todo.completed ? '完了' : '未完了'}">未完了</span></button></td>
                     <td class="todo-memo-cell">
                         <details class="todo-memo" th:if="${!#strings.isEmpty(todo.detail)}">
-                            <summary><span class="todo-memo-preview" th:text="${todo.detailPreview}"></span><span class="todo-memo-action">確認する</span></summary>
+                            <summary><span class="todo-memo-preview" th:text="${todo.detailPreview}"></span><span class="todo-memo-action">確認する</span><span class="todo-memo-close">閉じる</span></summary>
                             <p th:text="${todo.detail}"></p>
                         </details>
                         <span th:if="${#strings.isEmpty(todo.detail)}">（入力なし）</span>
@@ -163,6 +168,7 @@
     <p id="todo-status-error" class="quick-todo-error" role="alert" hidden></p>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
     <script src="/js/todo-statistics.js?v=20261126-21" th:src="@{/js/todo-statistics.js(v='20261126-21')}" defer></script>
+    <script src="/js/todo-mobile.js?v=20261126-26" th:src="@{/js/todo-mobile.js(v='20261126-26')}" defer></script>
     <script src="/js/todo-sort.js" th:src="@{/js/todo-sort.js}" defer></script>
     <script src="/js/todo-status.js" th:src="@{/js/todo-status.js}" defer></script>
     <script src="/js/todo-selection.js" th:src="@{/js/todo-selection.js}" defer></script>
