@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringJUnitConfig(QuickTodoTests.Config.class)
 @WebAppConfiguration
+@org.springframework.security.test.context.support.WithMockUser
 class QuickTodoTests {
     @Configuration
     @EnableWebMvc

@@ -438,3 +438,8 @@ body {
 .column-sort span { opacity: .4; }
 .column-sort.sort-asc .sort-up, .column-sort.sort-desc .sort-down { opacity: 1; }
 .column-sort:hover { background: #ffffff26; }
+
+.auth-container { max-width: 520px; }
+.auth-form { display: grid; gap: 12px; }
+.account-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 16px; padding: 12px 24px; }
+.account-bar form { margin: 0; }

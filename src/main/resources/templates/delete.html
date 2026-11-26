@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css?v=20261126-5" th:href="@{/css/style.css(v='20261126-5')}">
 </head>
 <body>
+    <div th:replace="~{fragments/account :: account}"></div>
     <main class="container">
         <div class="page-heading"><h1 class="page-title">やることの削除確認</h1><img class="title-image" src="/images/todo-delete.png" alt="" width="88" height="72"></div>
         <p class="confirm-value">やること：<span th:text="${todo.title}"></span></p>

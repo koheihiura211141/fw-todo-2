@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/style.css?v=20261126-5" th:href="@{/css/style.css(v='20261126-5')}">
 </head>
 <body>
+    <div th:replace="~{fragments/account :: account}"></div>
     <main class="container">
         <div class="page-heading"><h1 class="page-title">やることを編集</h1><img class="title-image" src="/images/todo-edit.png" alt="" width="88" height="72"></div>
         <form method="post" th:action="@{/todos/{id}/confirm(id=${todoId})}" th:object="${todo}">
